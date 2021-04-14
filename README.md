@@ -32,9 +32,9 @@ Now, Monke can check all of his assets activity in one place and consult the Coi
 
 | Functionalities                                 | MoSCoW | Done ? |
 | :--------------------                           | ------ | -----: |
-| Project initialization                          | M | :white_check_mark: |
-| Monke Registering/Signing In                    | M | :x: |
-| Consult the Coin Market                         | M | :x: |
-| Create a portfolio/add assets                   | M | :x: |
-| Add Transactions (Buy, Sell, Convert, Transfer) | M | :x: |
+| Project initialization                          | M |:white_check_mark:|
+| Monke Registering/Signing In                    | M |:x:|
+| Consult the Coin Market                         | M |:x:|
+| Create a portfolio/add assets                   | M |:x:|
+| Add Transactions (Buy, Sell, Convert, Transfer) | M |:x:|
 
