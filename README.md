@@ -32,15 +32,9 @@ Now, Monke can check all of his assets activity in one place and consult the Coi
 
 | Functionalities                                 | MoSCoW | Done ? |
 | :--------------------                           | ------ | -----: |
-| Creation non graphique d'un Reseau              | M | OUI |
-| Lancement d'un test                             | M | OUI |
-| Recuperation du Resultat                        | M | OUI |
-| Ajout de la fonction d'activation d'un Neurone  | M | OUI |
-| Retropropagation de l'erreur                    | M | OUI |
-| Lancement d'un entrainement complet             | S | OUI |
-| Lancement d'un entrainement avec un fichier     | S | OUI |
-| Utiliser un Reseau Entrainé                     | S | NON |
-| Sauvegarder un Reseau                           | C | OUI |
-| Charger un Reseau                               | C | OUI |
-| Transformer une image en données d'entrainement | W | NON |
-| Ajouter une interface graphique                 | S | OUI |
+| Project initialization                          | M | :white_check_mark: |
+| Monke Registering/Signing In                    | M | :x: |
+| Consult the Coin Market                         | M | :x: |
+| Create a portfolio/add assets                   | M | :x: |
+| Add Transactions (Buy, Sell, Convert, Transfer) | M | :x: |
+
