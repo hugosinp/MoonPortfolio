@@ -1,7 +1,16 @@
 from django.shortcuts import render
+from .models import Article
 
 def blog_index(request):
-    return render(request, 'blog/blog_index.html')
+    articles = Article.objects.all()
+    data = {'articles': articles}
+    return render(request, 'blog/blog_index.html', data)
 
 def article(request, name):
-    return render(request, 'blog/article.html')
+    try:
+        article = Article.objects.get(title=name)
+        data = {'article': article}
+    except:
+        data = {'message': 'Article does not exists'}
+
+    return render(request, 'blog/article.html', data)

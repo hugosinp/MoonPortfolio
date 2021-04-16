@@ -1,20 +1,68 @@
 {% extends 'home/base.html' %}
+{% load static %}
 
 {% block title %}
-Index
+MoonPortfolio
 {% endblock %}
 
 {% block styles %}
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <h1>Index home</h1>
-            <p> Welcome to MoonPortfolio</p>
-        </div>
-    </div>
+<div class="container ">
+      <div class="row">
+              <div class="col m-5 p-5">
+                <h1>Welcome to MoonPortfolio !</h1>
+                <h5>User-Friendly Asset Manager which allows users to easily manage their assets whatever the broker is !</br></br>
+                  A MoonUser can :
+                  <ul>
+                    <li>Create a portfolio</li>
+                    <li>Add new Assets</li>
+                    <li>Add transactions (Buy, Sell, Convert, Transfer)</li>
+                    <li>Follow his portfolio's activity</li>
+                    <li>Manage his expenses</li>
+                  <ul>
+                </h5>
+              </div>
+              <div class="col m-5 p-5">
+                <img src="{% static 'img/wallet.png' %}" alt="" width="400" height="400" class="d-inline-block align-text-top">
+              </div>
+  </div>
 </div>
+
+<div class="container">
+    <table class="table table-hover table-bordered m-5" id="coins" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Name</th>
+                <th scope='col'>Price</th>
+                <th scope='col'>Market Cap</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if data %}
+                {% for coin in data %}
+                    <tr>
+                        <td class='align-middle'>{{ coin.market_cap_rank }}</td>
+                        <td class='align-middle'><img src={{ coin.image }} height='40'> <a href=''>{{ coin.name }}</a> {{ coin.symbol }}</td>
+                        <td class='align-middle'>{{ coin.current_price }} $US</td>
+                        <td class='align-middle'>{{ coin.market_cap }} $US</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <h3>No data from CoinGecko</h3>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<script>
+  $(document).ready(function () {
+    $('#coins').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+  });
+</script>
 {% endblock %}
+
+
 

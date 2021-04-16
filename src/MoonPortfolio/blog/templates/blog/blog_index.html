@@ -1,1 +1,35 @@
-<h1>Index Blog</h1>
+{% extends 'home/base.html' %}
+
+{% block title %}
+MoonPortfolio
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm">
+            <h1>Column 1</h1>
+        </div>
+
+        <div class="col-sm">
+            <h1>Blog Page</h1>
+            <h2>Article list :</h2>
+
+            {% for article in articles %}
+                <h5><a href="article/{{ article.title }}">{{ article.title }}</a></h5>
+                <p>Created : {{ article.date }} by {{ article.author }}</p>
+            {% endfor %}
+
+        </div>
+
+        <div class="col-sm">
+            <h1>Column 3</h1>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

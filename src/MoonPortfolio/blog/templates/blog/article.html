@@ -1,1 +1,25 @@
-<h1>Article</h1>
+{% extends 'home/base.html' %}
+
+{% block title %}
+MoonPortfolio
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>{{article.title}}</h1>
+            <small>Created : {{ article.date }} by {{ article.author }}</small>
+            <br><br>
+            <p>{{ article.body }}</p>
+            <p>{{ message }}</p>
+
+            <br/>
+            <a class="btn btn-secondary" href="{% url 'blog' %}">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
