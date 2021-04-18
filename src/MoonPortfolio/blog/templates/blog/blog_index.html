@@ -8,28 +8,23 @@ MoonPortfolio
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid">
+<div class="container mt-5">
+    
+    <h1>MoonPortfolio Blog 🌑</h1>
     <div class="row">
-
-        <div class="col-sm">
-            <h1>Column 1</h1>
-        </div>
-
-        <div class="col-sm">
-            <h1>Blog Page</h1>
-            <h2>Article list :</h2>
-
+        
             {% for article in articles %}
-                <h5><a href="article/{{ article.title }}">{{ article.title }}</a></h5>
-                <p>Created : {{ article.date }} by {{ article.author }}</p>
+                <div class="card-img-top m-5" src="" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p>Created : {{ article.date }} by {{ article.author }}</p>
+                        <p class="card-text">{{ article.body }}</p>
+                        <a href="article/{{ article.title }}" class="btn btn-primary">See More</a>
+                    </div>
+                </div>
             {% endfor %}
 
-        </div>
-
-        <div class="col-sm">
-            <h1>Column 3</h1>
-        </div>
-
     </div>
+
 </div>
 {% endblock %}

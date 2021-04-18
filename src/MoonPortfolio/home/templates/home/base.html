@@ -13,27 +13,38 @@
         {% block styles %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-              
-              <a class="navbar-brand ms-5 ps-5" href="{% url 'home' %}">
-                <img src="{% static 'img/monke.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
-                MoonPortfolio
-              </a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'blog' %}">Blog</a>
-                  </li>
-                </ul>
-              </div>
 
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container ml-5 mr-5 pl-5 pr-5">
+              
+            <a class="navbar-brand" href="{% url 'home' %}">
+              <img src="{% static 'img/wallet.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+              MoonPortfolio  
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+              
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                </li>
+              </ul>
             </div>
-          </nav>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+              <ul class="nav justify-content-end">
+                <li class="nav-item ">
+                  <a class="nav-link active text-light" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-light" href="{% url 'register' %}">Register</a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </nav>
 
         {% block body %}
         

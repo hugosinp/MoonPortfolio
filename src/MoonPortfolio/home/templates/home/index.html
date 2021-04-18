@@ -11,8 +11,8 @@ MoonPortfolio
 {% block body %}
 <div class="container ">
       <div class="row">
-              <div class="col m-5 p-5">
-                <h1>Welcome to MoonPortfolio !</h1>
+              <div class="col m-5 pt-5 pb-5">
+                <h1>The Best MoonPortfolio !</h1>
                 <h5>User-Friendly Asset Manager which allows users to easily manage their assets whatever the broker is !</br></br>
                   A MoonUser can :
                   <ul>
@@ -24,14 +24,14 @@ MoonPortfolio
                   <ul>
                 </h5>
               </div>
-              <div class="col m-5 p-5">
+              <div class="col m-5 pl-5 pr-5">
                 <img src="{% static 'img/wallet.png' %}" alt="" width="400" height="400" class="d-inline-block align-text-top">
               </div>
   </div>
 </div>
 
-<div class="container">
-    <table class="table table-hover table-bordered m-5" id="coins" cellspacing="0" width="100%">
+<div class="container m-5">
+    <table class="table table-hover table-bordered" id="coins" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th scope='col'>#</th>
@@ -45,7 +45,7 @@ MoonPortfolio
                 {% for coin in data %}
                     <tr>
                         <td class='align-middle'>{{ coin.market_cap_rank }}</td>
-                        <td class='align-middle'><img src={{ coin.image }} height='40'> <a href=''>{{ coin.name }}</a> {{ coin.symbol }}</td>
+                        <td class='align-middle'><img src={{ coin.image }} height='40'> <a href=''>{{ coin.name }} {{ coin.symbol }}</a></td>
                         <td class='align-middle'>{{ coin.current_price }} $US</td>
                         <td class='align-middle'>{{ coin.market_cap }} $US</td>
                     </tr>
