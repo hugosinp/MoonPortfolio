@@ -1,0 +1,22 @@
+{% extends 'home/base_logged.html' %}
+
+{% block title %}
+MoonPortfolio | Edit Post
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <h1>Edit Post</h1>
+        </br>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Edit Post !</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

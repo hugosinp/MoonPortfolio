@@ -1,7 +1,7 @@
-{% extends 'home/base.html' %}
+{% extends 'home/base_logged.html' %}
 
 {% block title %}
-MoonPortfolio
+MoonPortfolio | {{post.title}}
 {% endblock %}
 
 {% block styles %}
@@ -11,10 +11,10 @@ MoonPortfolio
 <div class="container">
     <div class="row">
         <div class="col">
-            <h1>{{article.title}}</h1>
-            <small>Created : {{ article.date }} by {{ article.author }}</small>
+            <h1>{{post.title}}</h1>
+            <small>Created : {{ post.date }} by {{ post.author }}</small>
             <br><br>
-            <p>{{ article.body }}</p>
+            <p>{{ post.body }}</p>
             <p>{{ message }}</p>
 
             <br/>

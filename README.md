@@ -30,11 +30,12 @@ Now, Monke can check all of his assets activity in one place and consult the Coi
 
 # Technical Analysis
 
-| Functionalities                                 | MoSCoW | Done ? |
-| :--------------------                           | ------ | -----: |
-| Project initialization                          | M |:white_check_mark:|
-| Monke Registering/Signing In                    | M |:x:|
-| Consult the Coin Market                         | M |:x:|
-| Create a portfolio/add assets                   | M |:x:|
-| Add Transactions (Buy, Sell, Convert, Transfer) | M |:x:|
-
+| Functionalities                                               | MoSCoW | Done ? |
+| :--------------------                                         | ------ | -----: |
+| Project initialization                                        | M |:white_check_mark:|
+| Monke Registering/Signing In                                  | M |:white_check_mark:|
+| Consult the Coin Market                                       | M |:x:|
+| Create a portfolio/add assets                                 | M |:x:|
+| Add Transactions (Buy, Sell, Convert, Transfer)               | M |:x:|
+| Interact with in the blog (Create, Modify, Delete, Comment)   | S |:x:|
+| Modify and Customize Profile                                  | S |:x:|

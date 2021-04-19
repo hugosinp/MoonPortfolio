@@ -1,7 +1,7 @@
-{% extends 'home/base.html' %}
+{% extends 'home/base_logged.html' %}
 
 {% block title %}
-MoonPortfolio
+MoonPortfolio | Posts
 {% endblock %}
 
 {% block styles %}
@@ -11,15 +11,20 @@ MoonPortfolio
 <div class="container mt-5">
     
     <h1>MoonPortfolio Blog 🌑</h1>
+    <a class="btn btn-primary" href="{% url 'add_post' %}">Add a new Post !</a>
+    <a class="btn btn-primary" href="{% url 'edit_post' %}">Edit my Posts !</a>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor%}
     <div class="row">
         
-            {% for article in articles %}
+            {% for post in posts %}
                 <div class="card-img-top m-5" src="" style="width: 20rem;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ article.title }}</h5>
-                        <p>Created : {{ article.date }} by {{ article.author }}</p>
-                        <p class="card-text">{{ article.body }}</p>
-                        <a href="article/{{ article.title }}" class="btn btn-primary">See More</a>
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p>Created : {{ post.date }} by {{ post.author }}</p>
+                        <p class="card-text">{{ post.body }}</p>
+                        <a href="post/{{ post.title }}" class="btn btn-primary">See More</a>
                     </div>
                 </div>
             {% endfor %}

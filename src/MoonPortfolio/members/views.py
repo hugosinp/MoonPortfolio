@@ -4,8 +4,6 @@ from django.contrib.auth import authenticate, login, logout
 
 from .forms import CreateUserForm
 
-# Create your views here.
-
 def register(request):
     form = CreateUserForm()
 
@@ -16,12 +14,12 @@ def register(request):
             user = form.cleaned_data.get('username')
             messages.success(request, 'Account '+user+ ' was succesfully created !')
 
-            return redirect('login')
+            return redirect('loginPage')
 
     context = {'form' : form}
     return render(request, 'registration/register.html', context)
 
-def login(request):
+def loginPage(request):
 
     if(request.method == "POST"):
         username = request.POST.get('username')
@@ -31,10 +29,19 @@ def login(request):
 
         if user is not None:
             login(request, user)
-            return redirect('blog')
         else:
             messages.info(request, 'Username or Password is incorrect')
 
     context = {}
     return render(request, 'registration/login.html', context)
+
+def logoutPage(request):
+    logout(request)
+    return redirect('loginPage')
+
+
+def profilePage(request):
+
+    context = {}
+    return render(request, 'registration/profile.html', context)
 
