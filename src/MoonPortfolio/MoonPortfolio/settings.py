@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'blog.apps.BlogConfig',
     'members.apps.MembersConfig',
+    'market.apps.MarketConfig',
 ]
 
 MIDDLEWARE = [

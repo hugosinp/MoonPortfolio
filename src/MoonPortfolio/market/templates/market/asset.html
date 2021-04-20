@@ -1,0 +1,56 @@
+{% extends 'home/base_logged.html' %}
+{% load static %}
+
+{% block title %}
+MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.symbol }} {% endif %} {% endfor %}
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <div class="row">
+        
+        <div class="container m-5">
+          <h1>Rank : {% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.market_cap_rank }} {% endif %} {% endfor %}</h1>
+          <img src="{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.image }} {% endif %} {% endfor %}" style="max-height: 20vh; width:100%; object-fit: contain;" class="img-fluid" alt="Responsive image">
+          <h1>{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.name }} {% endif %} {% endfor %}</h1>
+          <h1>{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.symbol }} {% endif %} {% endfor %}</h1>
+          <h1>{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.current_price }} {% endif %} {% endfor %} $USD</h1>
+          <h1>{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.market_cap }} {% endif %} {% endfor %} $USD</h1>
+        
+          <!-- TradingView Widget BEGIN -->
+          <div class="tradingview-widget-container">
+            <div id="tradingview_61b61"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+              <script type="text/javascript">
+                  var x = {% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.symbol }} {% endif %} {% endfor %}
+                  new TradingView.widget(
+                  {
+                  "width": 980,
+                  "height": 610,
+                  "symbol": "COINBASE:adaUSD",
+                  "interval": "D",
+                  "timezone": "Etc/UTC",
+                  "theme": "dark",
+                  "style": "1",
+                  "locale": "fr",
+                  "toolbar_bg": "#f1f3f6",
+                  "enable_publishing": false,
+                  "allow_symbol_change": true,
+                  "container_id": "tradingview_61b61"
+                }
+                  );
+              </script>
+          </div>
+          <!-- TradingView Widget END -->
+        
+        </div>
+
+  </div>
+</div>
+
+
+{% endblock %}

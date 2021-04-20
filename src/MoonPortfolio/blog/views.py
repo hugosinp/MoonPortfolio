@@ -1,3 +1,4 @@
+from django.http.response import Http404
 from django.shortcuts import render, redirect
 from .models import Post
 
@@ -24,30 +25,52 @@ def post(request, post_name):
 
 @login_required(login_url='login')
 def add_post(request):
-    form = PostForm()
 
-    if (request.method == "POST"):
-        form = PostForm(request.POST)
-        if form.is_valid():
+    if not request.user.is_authenticated:
+        raise Http404
 
-            post = form.save()
-            post.author = request.user.id
-            post.save()
- 
-            title = form.cleaned_context.get('title')
-            messages.success(request, 'Post \"'+title+ '\" was succesfully created !')
 
-            return redirect('blog')
+    form = PostForm(request.POST, request.FILES)
+    if form.is_valid():
+        instance = form.save()
+        instance.author = request.user
+        instance.save()
+        messages.success(request, "Successfully Created")
 
-        else:
-            title = form.cleaned_context.get('title')
-            messages.error(request, 'Post \"'+title+ '\" was not created')
+        return redirect('blog')
 
     context = {'form' : form}
 
     return render(request, 'blog/add_post.html', context)
 
 @login_required(login_url='login')
-def edit_post(request):
+def edit_post(request, pk):
 
-    return render(request, 'blog/edit_post.html')
+    if not request.user.is_authenticated:
+        raise Http404
+
+    post = Post.objects.get(id=pk)
+    form = PostForm(instance=post)
+
+    if form.is_valid():
+        instance = form.save()
+        instance.save()
+        messages.success(request, "Successfully Created")
+
+        return redirect('blog')
+
+    context = {'form' : form}
+
+    return render(request, 'blog/add_post.html', context)
+
+@login_required(login_url='login')
+def delete_post(request, pk):
+
+    post = Post.objects.get(id=pk)
+
+    if request.method == 'POST':
+        post.delete()
+        redirect('blog')
+    
+    context = {'post': post}
+    return render(request, 'blog/delete.html', context)
