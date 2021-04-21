@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'members.apps.MembersConfig',
     'market.apps.MarketConfig',
+    'django.contrib.humanize',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

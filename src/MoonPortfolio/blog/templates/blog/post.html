@@ -8,18 +8,31 @@ MoonPortfolio | {{post.title}}
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1>{{post.title}}</h1>
-    <div class="row">
+<div class="container">
+    <div class="row m-5">
+        <div class="container">
 
-        <small>Created : {{ post.date }} by {{ post.author }}</small>
-        <br><br>
-        <p>{{ post.body }}</p>
-        <p>{{ message }}</p>
-        <img src="{{ post.image.url }}" style="max-height: 20vh; width:100%; object-fit: contain;" class="img-fluid" alt="Responsive image">
-        <br/>
-        <a class="btn btn-secondary" href="{% url 'blog' %}">Back</a>
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title"><h1>{{post.title}}</h1></h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Created : {{ post.date }} by {{ post.author }}</h6>
+                    <p class="card-text">{{ post.body }}{{ message }}</p>
+                    <img src="{{ post.image.url }}" style="max-height: 20vh; width:100%; object-fit: contain;" class="img-fluid" alt="Responsive image">
+                </div>
+            </div>
+            
+            </br></br>
 
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+            <br/>
+            <a class="btn btn-secondary" href="{% url 'blog' %}">Back</a>
+        </div>
     </div>
 </div>
 {% endblock %}

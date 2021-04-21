@@ -1,5 +1,6 @@
 {% extends 'home/base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 MoonPortfolio
@@ -32,32 +33,49 @@ MoonPortfolio
   </div>
 </div>
 
-<div class="container m-5">
-    <table class="table table-hover table-bordered" id="coins" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th scope='col'>#</th>
-                <th scope='col'>Name</th>
-                <th scope='col'>Price</th>
-                <th scope='col'>Market Cap</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if data %}
-                {% for coin in data %}
-                    <tr>
-                        <td class='align-middle'>{{ coin.market_cap_rank }}</td>
-                        <td class='align-middle'><img src={{ coin.image }} height='40'> <a href=''>{{ coin.name }} {{ coin.symbol }}</a></td>
-                        <td class='align-middle'>{{ coin.current_price }} $US</td>
-                        <td class='align-middle'>{{ coin.market_cap }} $US</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
-                <h3>No data from CoinGecko</h3>
-            {% endif %}
-        </tbody>
+<div class="container">
+  <div class="row m-5">
+    <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
+                  <thead>
+                      <tr>
+                          <th scope='col'>#</th>
+                          <th scope='col'>Name</th>
+                          <th scope='col'>Price / 24h Change</th>
+                          <th scope='col'>Market Cap</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% if data %}
+                          {% for coin in data %}
+                              <tr>
+                                  <td class='align-middle'>{{ coin.market_cap_rank }}</td>
+                                  <td class='align-middle'>
+                                      <a style="text-decoration: none; color: white;" href="asset/{{ coin.symbol }}" target="blank">
+                                          <img src={{ coin.image }} height='40' style="padding-right: 3%;">
+                                          <span class="font-weight-bold">{{ coin.name }}</span> 
+                                          <span class="badge text-uppercase">({{ coin.symbol }})</span> 
+                                      </a>
+                                  </td>
+                                  <td class='align-middle'>
+                                      {{ coin.current_price|intcomma }} $USD 
+                                      {% if coin.price_change_percentage_24h >= 0 %}
+                                          <span class="text-danger" style="color=green;">(+{{ coin.price_change_percentage_24h }}%)</span>
+                                      {% elif coin.price_change_percentage_24h < 0 %}
+                                          <span class="text-success">({{ coin.price_change_percentage_24h }}%)</span>
+                                      {% endif %}
+                                  </td>
+                                  <td class='align-middle'>{{ coin.market_cap|intcomma }} $USD</td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <h3>No data from CoinGecko</h3>
+                      {% endif %}
+
+                  </tbody>
     </table>
+  </div>
 </div>
+
 <script>
   $(document).ready(function () {
     $('#coins').DataTable();

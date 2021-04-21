@@ -8,30 +8,33 @@ MoonPortfolio | Posts
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    
-    <h1>MoonPortfolio Blog 🌑</h1>
-    <a class="btn btn-primary" href="{% url 'add_post' %}">Add a new Post !</a>
-    
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor%}
-    <div class="row">
-        
-            {% for post in posts %}
-                <div class="card m-5" style="width: 20rem;">
-                    <img class="card-img-top"  style="max-height: 20vh; width:100%; object-fit: contain;" src="{{ post.image.url }}" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p>Created : {{ post.date }} by {{ post.author }}</p>
-                        <p class="card-text">{{ post.headline }}</p>
-                        <a href="{% url 'post' post.title %}" class="btn btn-primary">See More</a>
-                        <a href="{% url 'edit_post' post.id %}" class="btn btn-secondary">Edit</a>
-                        <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
-                    </div>
-                </div>
-            {% endfor %}
+<div class="container">
+    <div class="row m-5">
+        <div class="container">
+            <h1>MoonPortfolio Blog 🌑</h1>
+            <a class="btn btn-primary" href="{% url 'add_post' %}">Add a new Post !</a>
+            
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor%}
+            <div class="row">
+                
+                    {% for post in posts %}
+                        <div class="card m-4" style="width: 45%;">
+                            <img class="card-img-top"  style="max-height: 20vh; width:100%; object-fit: contain;" src="{{ post.image.url }}" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <p>Created : {{ post.date }} by {{ post.author }}</p>
+                                <p class="card-text">{{ post.headline }}</p>
+                                <a href="{% url 'post' post.title %}" class="btn btn-primary">See More</a>
+                                <a href="{% url 'edit_post' post.id %}" class="btn btn-secondary">Edit</a>
+                                <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
 
+            </div>
+        </div>
     </div>
 
 </div>
