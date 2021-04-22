@@ -20,7 +20,7 @@
           <div class="container ms-5">
               
             <a class="navbar-brand" href="{% url 'home' %}">
-              <img src="{% static 'img/wallet.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+              <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
               MoonPortfolio  
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,35 @@
         {% block body %}
         
         {% endblock %}
-        
+
+        <footer class="text-center text-white" style="background-color: rgb(38, 38, 38);">
+        <!-- Grid container -->
+        <div class="container p-4 pb-0">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+
+                <!-- Linkedin -->
+                <a href="https://www.linkedin.com/in/hugo-sinprasith-1b5367199/" target="blank">
+                    <img src="{% static 'img/linkedin.png' %}" alt="" width="40" height="40"> 
+                </a>
+                <!-- Github -->
+                <a href="https://github.com/hugosinp" target="blank">
+                    <img src="{% static 'img/github.png' %}" alt="" width="40" height="40"> 
+                </a>
+
+            </section>
+            <!-- Section: Social media -->
+            <div class="text-center font-italic" style="color: rgba(255, 255, 255, 0.2);">
+                Powered By CoinGecko and TradingView
+            </div>
+        </div>
+        <!-- Grid container -->
+
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: rgb(30, 30, 30);">
+            Hugo SINPRASITH © 2021 
+        </div>
+        <!-- Copyright -->
+        </footer>       
     </body>
 </html>
