@@ -35,6 +35,7 @@ def loginPage(request):
     context = {}
     return render(request, 'registration/login.html', context)
 
+
 def logoutPage(request):
     logout(request)
     return redirect('loginPage')

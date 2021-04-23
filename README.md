@@ -1,6 +1,8 @@
-# :new_moon: MoonPortfolio :new_moon: -----> 🚧 WORK IN PROGRESS 🚧
+# :new_moon: MoonPortfolio :new_moon: ---> 🚧 WORK IN PROGRESS 🚧
 
-__Subject :__ Asset Manager
+__Init Date :__ 14/04/2021
+__Subject :__ Asset Manager Web App
+__Tech used :__ Django, Bootstrap, Python, HTML, CSS, JS
 
 __Goal :__ 
 

@@ -26,7 +26,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                     <h3 class="card-title">
                       <img src="{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.image }} {% endif %} {% endfor %}" style="height:50%; width:15%; object-fit: contain;" alt="Responsive image">
                       {% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.name }} {% endif %} {% endfor %} 
-                      <span class="badge bg-dark text-uppercase text-light">{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.symbol }} {% endif %} {% endfor %}</span>
+                      <span class="badge rounded-pill bg-dark text-uppercase text-light">{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.symbol }} {% endif %} {% endfor %}</span>
                     </h3>
                     <h6 class="card-subtitle mb-2 text-muted">
                       Rank -> #{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.market_cap_rank }} {% endif %} {% endfor %}
@@ -40,7 +40,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                       {% if coin.symbol == asset_symbol %}
 
                         <h4 class=""> {{coin.name }} Price </h4>
-                        <h3 class="font-weight-bold">{{ coin.current_price|intcomma }} $</h3>
+                        <h3 class="fw-bold">{{ coin.current_price|intcomma }} $</h3>
 
                         {% if coin.price_change_percentage_24h >= 0 %}
                           <span class="badge bg-success text-light" style="color=green;">+{{ coin.price_change_percentage_24h|floatformat:"2" }}%
