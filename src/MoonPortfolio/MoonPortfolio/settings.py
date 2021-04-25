@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL='/dashboard'
+LOGIN_REDIRECT_URL='/portfolio/dashboard'
 LOGOUT_REDIRECT_URL = '/'
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'members.apps.MembersConfig',
     'market.apps.MarketConfig',
+    'portfolio.apps.PortfolioConfig',
     'django.contrib.humanize',
     'mathfilters',
 ]
