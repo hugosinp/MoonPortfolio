@@ -13,6 +13,7 @@ def blog_index(request):
     context = {'posts': post}
     return render(request, 'blog/blog_index.html', context)
 
+
 @login_required(login_url='login')
 def post(request, post_name):
     try:
@@ -22,6 +23,7 @@ def post(request, post_name):
         context = {'message': 'Article does not exists'}
 
     return render(request, 'blog/post.html', context)
+
 
 @login_required(login_url='login')
 def add_post(request):

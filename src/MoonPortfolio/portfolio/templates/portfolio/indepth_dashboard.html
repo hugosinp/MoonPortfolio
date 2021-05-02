@@ -63,43 +63,8 @@ MoonPortfolio
       </nav>
       
       <div class="row mt-4 mb-5 mx-4">
-        
-        <h1>Select your Portfolio !</h1>
+        <h1>{{ portfolio_data.name }} Dashboard {% for transaction in transactions %} {{transaction.price}} {% endfor %}</h1>
 
-        {% for portfolio in portfolios %}
-        
-          <a class="btn btn-primary" href="{% url 'dashboard' portfolio.name %}">{{ portfolio.name }}</a>
-        
-        {% endfor %}
-
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Get started !
-          </button>
-
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Choose a name for your Portfolio</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form action="" method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="submit" class="btn btn-primary" value="Submit">
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </h2>
       </div>
 
     </div>

@@ -82,8 +82,10 @@ MoonPortfolio | Market
             <!-- TradingView Widget END -->
             </br>
 
-            <a href="{% url 'market_simplified' %}" class="btn btn-secondary btn" role="button">Simplified</a>
-            <a href="{% url 'market_advanced' %}" class="btn btn-primary btn" role="button" aria-pressed="true">Advanced (Trading View)</a>
+            <div class="btn-group">
+                <a href="{% url 'market_simplified' %}" class="btn btn-primary" aria-current="page">Simplified</a>
+                <a href="{% url 'market_advanced' %}" class="btn btn-primary active">Advanced (Trading View)</a>
+            </div>
 
             </br></br>
             
