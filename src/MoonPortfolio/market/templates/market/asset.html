@@ -39,7 +39,9 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                     {% for coin in data %}
                       {% if coin.symbol == asset_symbol %}
 
-                        <h4 class=""> {{coin.name }} Price </h4>
+                        
+
+                        <h4 class=""> {{coin.name }} Price</h4>
                         <h3 class="fw-bold">{{ coin.current_price|intcomma }} $</h3>
 
                         {% if coin.price_change_percentage_24h >= 0 %}

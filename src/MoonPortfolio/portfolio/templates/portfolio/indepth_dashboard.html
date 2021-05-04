@@ -1,5 +1,7 @@
 {% extends 'home/base_nonav.html' %}
 {% load static %}
+{% load humanize %}
+{% load mathfilters %}
 
 {% block title %}
 MoonPortfolio
@@ -63,8 +65,31 @@ MoonPortfolio
       </nav>
       
       <div class="row mt-4 mb-5 mx-4">
-        <h1>{{ portfolio_data.name }} Dashboard {% for transaction in transactions %} {{transaction.price}} {% endfor %}</h1>
+        <h1>{{ portfolio_data.name }} Dashboard</h1>
+        <p>
+          Totals : </br>
+          {% for amount in amount_sum_per_coin %}
 
+                {{ amount.amount__sum }} {{ amount.asset_name }} || total {% for totals in total %}{{ totals.totally }}{% endfor %} price_total {% for price in price_sum_per_coin %}{{ price.total__sum }}{% endfor %}</br>
+                  
+                {% if amount.asset_name  ==  price.asset_name  %}
+                  {{ amount.asset_name }} = {% for price in price_sum_per_coin %}{% for totals in total %}{{ price.total__sum|div:totals.totally|mul:100|floatformat:"2" }}%{% endfor %}{% endfor %}
+                {% endif %}
+
+          {% endfor %}
+
+          </br>
+
+          Transactions : </br>
+          {% for transaction in transactions %}
+            Coin : {{ transaction.asset_name }} </br>
+            Total : {{ transaction.price_per_coin|mul:transaction.amount|floatformat:"2" }} $</br>
+            Amount : {{ transaction.amount }} </br>
+            Price per coin : {{ transaction.price_per_coin }} </br> </br>
+
+            
+          {% endfor %}
+        </p>
       </div>
 
     </div>

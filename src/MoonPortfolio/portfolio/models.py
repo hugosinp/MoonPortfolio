@@ -14,7 +14,9 @@ class Transaction(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, default=1)
     transaction_type = models.CharField(max_length=200)
     asset_name = models.CharField(max_length=200)
-    price = models.FloatField()
+    amount = models.FloatField(default=0)
+    price_per_coin = models.FloatField(default=0)
+    total = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.transaction_type)
