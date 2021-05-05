@@ -11,8 +11,14 @@ class Portfolio(models.Model):
 
 
 class Transaction(models.Model):
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, default=1)
-    transaction_type = models.CharField(max_length=200)
+
+    transaction_type_choice = (
+        ('Buy', 'Buy'),
+        ('Sell', 'Sell'),
+    )
+
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, null=True, blank=True)
+    transaction_type = models.CharField(max_length=10, choices=transaction_type_choice)
     asset_name = models.CharField(max_length=200)
     amount = models.FloatField(default=0)
     price_per_coin = models.FloatField(default=0)

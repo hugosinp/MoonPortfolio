@@ -11,9 +11,12 @@ MoonPortfolio
 {% endblock %}
 
 {% block body %}
+
 <div class="container m-0">
   <div class="row">
     <div class="col-2 bg-dark">
+
+
       <nav class="nav flex-column navbar-expand-lg py-2">
         <a class="navbar-brand text-light text-center " href="{% url 'dashboard' %}">
           <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
@@ -22,16 +25,73 @@ MoonPortfolio
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="nav-link active text-light mt-2" href="">Portfolio</a>
-        <a class="nav-link text-light" href="">Add Transactions</a>
-        <a class="nav-link text-light" href="">Add Portfolios</a>
+
+        <p>
+          <a class="nav-link active text-light mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            My Portfolios
+          </a>
+        </p>
+        <div class="collapse" id="collapseExample">
+          {% for all_portfolio in all_portfolio %}
+            <a class="nav-link active text-light" href="{% url 'dashboard' all_portfolio.name %}">{{ all_portfolio.name }}</a>
+          {% endfor %}
+        </div>
+
+
+        <a class="nav-link text-light mb-3" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">My Transactions</a>
+      
+        <!-- Modal -->
+        <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Transaction History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body text-center">
+                <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
+                  <thead>
+                      <tr>
+                          <th scope='col'>Type</th>
+                          <th scope='col'>Asset</th>
+                          <th scope='col'>Amount</th>
+                          <th scope='col'>Price Per Coin</th>
+                          <th scope='col'>Total</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% if transactions %}
+                          {% for transaction in transactions %}
+                              <tr>
+                                  <td class='align-middle'>{{ transaction.transaction_type }}</td>
+                                  <td class='align-middle'>{{ transaction.asset_name }}</td>
+                                  <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
+                                  <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
+                                  <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
+
+                              </tr>
+                          {% endfor %}
+                      {% endif %}
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </nav>
     </div>
     
+
     <div class="col p-0 mb-5">
+
       <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(30, 30, 30);">
-      <div class="container">
-          
+        <div class="container">
+            
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
                   <li class="nav-item">
@@ -60,36 +120,92 @@ MoonPortfolio
           </div>
 
         </div>
-
-    
       </nav>
       
-      <div class="row mt-4 mb-5 mx-4">
-        <h1>{{ portfolio_data.name }} Dashboard</h1>
-        <p>
-          Totals : </br>
-          {% for amount in amount_sum_per_coin %}
+      <div class="row m-5">
+        
+        <h1>
+          {{ portfolio_data.name }} Dashboard
+                  <!-- Button trigger modal -->
+          <button type="button " class="btn btn-primary float-end m-2" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+            <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add Transaction !
+          </button>
 
-                {{ amount.amount__sum }} {{ amount.asset_name }} || total {% for totals in total %}{{ totals.totally }}{% endfor %} price_total {% for price in price_sum_per_coin %}{{ price.total__sum }}{% endfor %}</br>
-                  
-                {% if amount.asset_name  ==  price.asset_name  %}
-                  {{ amount.asset_name }} = {% for price in price_sum_per_coin %}{% for totals in total %}{{ price.total__sum|div:totals.totally|mul:100|floatformat:"2" }}%{% endfor %}{% endfor %}
-                {% endif %}
+          <!-- Modal -->
+          <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add a new Transaction</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <input type="submit" class="btn btn-primary" value="Save">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </h1>
 
-          {% endfor %}
+        <div class="col mt-5">
+          <h2>Current Balance</h2>
+          <div id="container" style="width: 60%;">
+            <canvas id="myChart" width="100" height="100"></canvas>
+            <script>
+              
+              var config = {
+                type: 'doughnut',
+                data: {
+                  datasets: [{
+                    data: {{ data|safe }},
+                    backgroundColor: [
+                      '#173F5F', '#20639B', '#3CAEA3', '#F6D55C', '#ED553B'
+                    ],
+                    hoverOffset: 4
+                  }],
+                  labels: {{ labels|safe }}
+                },
+                options: {
+                  responsive: true
+                }
+              };
 
-          </br>
+              var myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+              );
+            </script>
+          </div>
+        </div>
 
-          Transactions : </br>
-          {% for transaction in transactions %}
-            Coin : {{ transaction.asset_name }} </br>
-            Total : {{ transaction.price_per_coin|mul:transaction.amount|floatformat:"2" }} $</br>
-            Amount : {{ transaction.amount }} </br>
-            Price per coin : {{ transaction.price_per_coin }} </br> </br>
+        <div class="col mt-5">
+          <h2>Your Assets</h2>
+          <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th scope='col'>Name</th>
+                    <th scope='col'>Holdings</th>
 
-            
-          {% endfor %}
-        </p>
+                </tr>
+            </thead>
+            <tbody>
+              {% for amount in amount_sum_per_coin %}
+                <tr>
+                    <td class='align-middle'>{{ amount.asset_name }}</td>
+                    <td class='align-middle'>{{ amount.amount__sum|floatformat:"2" }} {{ amount.asset_name }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
       </div>
 
     </div>
