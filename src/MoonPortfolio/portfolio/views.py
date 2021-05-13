@@ -43,9 +43,10 @@ def dashboard2(request, portfolio_name):
 
     amount_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('amount')).filter(portfolio_id=portfolio_data.id)
     price_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('total')).filter(portfolio_id=portfolio_data.id)
-    total = Transaction.objects.aggregate(Sum('total'))
-    #date jour-mois-année
-    #data = "https://api.coingecko.com/api/v3/coins/"+coin_name+"/history?date="+date+"&localization=false"
+    
+    total = Transaction.objects.filter(portfolio_id=portfolio_data.id).aggregate(Sum('total'))
+    
+
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
     coin_data = requests.get(url).json
 
@@ -69,8 +70,6 @@ def dashboard2(request, portfolio_name):
                     totals = 100
                     value = (value/totals)*100
                     data.append(value)
-
-    print(totals)
 
     form = TransactionForm()
 
