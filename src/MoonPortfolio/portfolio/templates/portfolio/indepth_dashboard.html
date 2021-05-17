@@ -4,7 +4,7 @@
 {% load mathfilters %}
 
 {% block title %}
-MoonPortfolio
+MoonPortfolio | Dashboard
 {% endblock %}
 
 {% block styles %}
@@ -12,13 +12,12 @@ MoonPortfolio
 
 {% block body %}
 
-<div class="container m-0">
+<div class="container mx-0 m-0">
   <div class="row">
-    <div class="col-2 bg-dark">
-
+    <div class="col-2 bg-dark p-0">
 
       <nav class="nav flex-column navbar-expand-lg py-2">
-        <a class="navbar-brand text-light text-center " href="{% url 'dashboard' %}">
+        <a class="navbar-brand text-light text-center m-0 mb-1" href="{% url 'dashboard' %}">
           <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
           MoonPortfolio  
         </a>
@@ -26,12 +25,10 @@ MoonPortfolio
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <p>
-          <a class="nav-link active text-light mt-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-            My Portfolios
-          </a>
-        </p>
-        <div class="collapse" id="collapseExample">
+        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          💼 Portfolios
+        </a>
+        <div class="collapse mx-3" id="collapseExample">
           {% for all_portfolio in all_portfolio %}
             {% if all_portfolio.user_id == request.user.id %}
               <a class="nav-link active text-light" href="{% url 'dashboard' all_portfolio.name %}">{{ all_portfolio.name }}</a>
@@ -40,14 +37,29 @@ MoonPortfolio
         </div>
 
 
-        <a class="nav-link text-light mb-3" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">My Transactions</a>
-      
+        <a class="nav-link text-light mx-2 my-2" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
+          📜 Transactions
+        </a>
+
+        <a class="nav-link text-light mx-2 my-2" href="{% url 'market_simplified' %}" target="_blank">
+          ⚖ Market
+        </a>
+
+        <a class="nav-link text-light mx-2 my-2" href="{% url 'blog' %}" target="_blank">
+          🗂 Blog
+        </a>
+
+        <a class="nav-link text-light mx-2 my-2" href="{% url 'profile' %}" target="_blank">
+          ⚙ Profile settings
+        </a>
+
+
         <!-- Modal -->
         <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Transaction History</h5>
+                <h5 class="modal-title" id="exampleModalLabel">📜 Transaction History</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -90,46 +102,8 @@ MoonPortfolio
 
     <div class="col p-0 mb-5">
 
-      <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(30, 30, 30);">
-        <div class="container">
-            
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'dashboard' %}">Portfolio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'market_simplified' %}">Market</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'blog' %}">Blog</a>
-                </li>
-            </ul>
-          </div>
-          
-          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="nav justify-content-end">
-
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ request.user }}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'profile' %}">Profile settings</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{% url 'logoutPage' %}">Logout</a></li>
-                </ul>
-              </li>
-
-            </ul>
-          </div>
-
-        </div>
-      </nav>
-
-
       <!-- ___________________________________________ROW 1___________________________________________-->
-      <div class="row m-5">
+      <div class="row mt-2 mx-4">
         
         <h1>
           {{ portfolio_data.name }} Dashboard
@@ -163,10 +137,64 @@ MoonPortfolio
 
         <!-- _____________________________Card 1_____________________________-->
         <div class="col-4 mt-5">
-          <div class="card" style="width: 100%%;">
-            <div class="card-body m-2">
-              <h3 class="card-title">Current Balance</h3>
-                <h4 class="fw-bold">${{ total.total__sum|floatformat:"2" }}</h4>
+          <div class="card" style="width: 100%;">
+            <div class="card-body m-2" id="group">
+              <h3 class="card-title">Current Balance 💰</h3>
+              <h1 class="fw-bold">
+                ${{ total.total__sum|floatformat:"2" }}
+              </h1>
+
+              <p>
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#pieChart" role="button" aria-expanded="false" aria-controls="pieChart">
+                  Pie chart
+                </a>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#totals" aria-expanded="false" aria-controls="totals">
+                  Statistics
+                </button>
+              </p>
+              <div class="collapse show" id="pieChart">
+                <div class="card card-body">
+
+                  <canvas id="myChart" width="100%" height="100%"></canvas>
+                  <script>
+                    
+                    var config = {
+                      type: 'doughnut',
+                      data: {
+                        datasets: [{
+                          data: {{ data|safe }},
+                          backgroundColor: [
+                            '#173F5F', '#20639B', '#3CAEA3', '#F6D55C', '#ED553B'
+                          ],
+                          hoverOffset: 4
+                        }],
+                        labels: {{ labels|safe }}
+                      },
+                      options: {
+                        responsive: true
+                      }
+                    };
+
+                    var myChart = new Chart(
+                      document.getElementById('myChart'),
+                      config
+                    );
+                  </script>
+
+                </div>
+              </div>
+
+              <div class="collapse" id="totals">
+                <div class="card card-body">
+                  <h3 class="card-title">Total Profit/Loss</h3>
+                </div>
+                <div class="card card-body">
+                  <h3 class="card-title">Total Invested</h3>
+                  <h1 class="fw-bold">${{ total.total__sum|floatformat:"2" }}</h1>
+                </div>
+              </div>
+
+
             </div>
           </div>
         </div>
@@ -175,7 +203,7 @@ MoonPortfolio
 
           <div class="card" style="width: 100%;">
             <div class="card-body m-2">
-              <h3 class="card-title">Your Assets</h3>
+              <h3 class="card-title">Your Assets 📈</h3>
               
               <table class="table table-hover " id="coins" cellspacing="0" width="100%">
                 <thead>
@@ -191,12 +219,13 @@ MoonPortfolio
                         <td class='align-middle'>
                         {% for coin in coin_data %}
                           {% if coin.symbol|upper == amount.asset_name %}
-                            <img src={{ coin.image }} height='25' style="padding-right: 10%;">
-                            {{ coin.name }} 
+                            <img src={{ coin.image }} height='30' style="padding-right: 10%;">
+                            <span class="fw-bold">{{ coin.name }}</span>
                             <span class="text-secondary">{{ amount.asset_name }}</span>
                           {% endif %}
                         {% endfor %}
                         </td>
+                        
                         <td class='align-middle'>
                           {% for coin in coin_data %}
                             {% if coin.symbol|upper == amount.asset_name %}
@@ -211,15 +240,30 @@ MoonPortfolio
                             {% endif %}
                           {% endfor %}
                         </td>
+
                         <td class='align-middle'>
+
+                          <span class="">
+                            {% for coin in coin_data %}
+                              {% if coin.symbol|upper == amount.asset_name %}
+                                ${{ coin.current_price|mul:amount.amount__sum|floatformat:"2" }}
+                              {% endif %}
+                            {% endfor %}
+                          </span>
+
+                          </br>
+
                           {% for price in price_sum_per_coin %}
                             {% if price.asset_name == amount.asset_name %}
                               ${{ price.total__sum|floatformat:"2" }}
                             {% endif %}
                           {% endfor %}
+
                           </br>
+                          
                           <span class="text-secondary">{{ amount.amount__sum|floatformat:"2" }} {{ amount.asset_name }}</span>
                         </td>
+
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -233,52 +277,14 @@ MoonPortfolio
 
       <!-- ___________________________________________ROW 2___________________________________________-->
       <div class="row m-5">
-        
-        <h1>In depth</h1>
 
         <div class="col mt-5">
-          <div class="card" style="width: 25rem;">
-            <div class="card-body m-2">
-              <h3 class="card-title">Current Balance</h3>
-              <div class="container" style="width: 100%;">
-                <canvas id="myChart" width="100" height="100"></canvas>
-                <script>
-                  
-                  var config = {
-                    type: 'doughnut',
-                    data: {
-                      datasets: [{
-                        data: {{ data|safe }},
-                        backgroundColor: [
-                          '#173F5F', '#20639B', '#3CAEA3', '#F6D55C', '#ED553B'
-                        ],
-                        hoverOffset: 4
-                      }],
-                      labels: {{ labels|safe }}
-                    },
-                    options: {
-                      responsive: true
-                    }
-                  };
 
-                  var myChart = new Chart(
-                    document.getElementById('myChart'),
-                    config
-                  );
-                </script>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div class="col mt-5">
 
-          <div class="card" style="width: 100%;">
-            <div class="card-body m-2">
-              <h3 class="card-title">Your Assets</h3>
 
-            </div>
-          </div>
         </div>
 
       </div>

@@ -9,6 +9,8 @@ class Portfolio(models.Model):
     def __str__(self):
         return str(self.name)
 
+class Holding(models.Model):
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, null=True, blank=True)
 
 class Transaction(models.Model):
 
