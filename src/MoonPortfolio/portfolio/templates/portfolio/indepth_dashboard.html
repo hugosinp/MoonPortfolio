@@ -106,8 +106,8 @@ MoonPortfolio | Dashboard
       <div class="row mt-2 mx-4">
         
         <h1>
-          {{ portfolio_data.name }} Dashboard
-                  <!-- Button trigger modal -->
+          {{ current_portfolio.name }} Dashboard
+          <!-- Button trigger modal -->
           <button type="button " class="btn btn-primary float-end m-2" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
             <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add Transaction !
           </button>
@@ -141,7 +141,7 @@ MoonPortfolio | Dashboard
             <div class="card-body m-2" id="group">
               <h3 class="card-title">Current Balance 💰</h3>
               <h1 class="fw-bold">
-                ${{ total.total__sum|floatformat:"2" }}
+                ${{ current_balance.current_value__sum|floatformat:"2" }}
               </h1>
 
               <p>
@@ -162,13 +162,13 @@ MoonPortfolio | Dashboard
                       type: 'doughnut',
                       data: {
                         datasets: [{
-                          data: {{ data|safe }},
+                          data: {{ holdings_percentages|safe }},
                           backgroundColor: [
                             '#173F5F', '#20639B', '#3CAEA3', '#F6D55C', '#ED553B'
                           ],
                           hoverOffset: 4
                         }],
-                        labels: {{ labels|safe }}
+                        labels: {{ asset_names|safe }}
                       },
                       options: {
                         responsive: true
@@ -213,22 +213,25 @@ MoonPortfolio | Dashboard
                         <th scope='col'>Holdings</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                  {% for amount in amount_sum_per_coin %}
+                  {% for holding in user_holdings %}
                     <tr>
                         <td class='align-middle'>
                         {% for coin in coin_data %}
-                          {% if coin.symbol|upper == amount.asset_name %}
-                            <img src={{ coin.image }} height='30' style="padding-right: 10%;">
-                            <span class="fw-bold">{{ coin.name }}</span>
-                            <span class="text-secondary">{{ amount.asset_name }}</span>
+                          {% if coin.symbol|upper == holding.asset_name %}
+                            <a style="text-decoration: none; color: black;" href="{% url 'asset' coin.symbol %}" target="_blank">
+                              <img src={{ coin.image }} height='30' style="padding-right: 10%;">
+                              <span class="fw-bold">{{ coin.name }}</span>
+                              <span class="text-secondary">{{ holding.asset_name }}</span>
+                            </a>
                           {% endif %}
                         {% endfor %}
                         </td>
                         
                         <td class='align-middle'>
                           {% for coin in coin_data %}
-                            {% if coin.symbol|upper == amount.asset_name %}
+                            {% if coin.symbol|upper == holding.asset_name %}
                               ${{ coin.current_price }}
                               {% if coin.price_change_percentage_24h >= 0 %}
                                   <span class="text-success" style="color=green;">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
@@ -242,31 +245,26 @@ MoonPortfolio | Dashboard
                         </td>
 
                         <td class='align-middle'>
-
                           <span class="">
                             {% for coin in coin_data %}
-                              {% if coin.symbol|upper == amount.asset_name %}
-                                ${{ coin.current_price|mul:amount.amount__sum|floatformat:"2" }}
+                              {% if coin.symbol|upper == holding.asset_name %}
+                                ${{ holding.current_value|floatformat:"2" }}
                               {% endif %}
                             {% endfor %}
                           </span>
-
                           </br>
-
-                          {% for price in price_sum_per_coin %}
-                            {% if price.asset_name == amount.asset_name %}
-                              ${{ price.total__sum|floatformat:"2" }}
-                            {% endif %}
-                          {% endfor %}
-
-                          </br>
-                          
-                          <span class="text-secondary">{{ amount.amount__sum|floatformat:"2" }} {{ amount.asset_name }}</span>
+                          <span class="text-secondary"> 
+                            {% for coin in coin_data %}
+                              {% if coin.symbol|upper == holding.asset_name %}
+                                {{ holding.total_asset_amount|floatformat:"2" }} {{ holding.asset_name }}
+                              {% endif %}
+                            {% endfor %}
+                          </span>
                         </td>
-
                     </tr>
                   {% endfor %}
                 </tbody>
+
               </table>
             </div>
           </div>

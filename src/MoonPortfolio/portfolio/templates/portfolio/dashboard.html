@@ -1,72 +1,114 @@
 {% extends 'home/base_nonav.html' %}
 {% load static %}
+{% load humanize %}
+{% load mathfilters %}
 
 {% block title %}
-MoonPortfolio
+MoonPortfolio | Dashboard
 {% endblock %}
 
 {% block styles %}
 {% endblock %}
 
 {% block body %}
-<div class="container m-0">
+
+<div class="container mx-0 m-0">
   <div class="row">
-    <div class="col-2 bg-dark">
+    <div class="col-2 bg-dark p-0">
+
       <nav class="nav flex-column navbar-expand-lg py-2">
-        <a class="navbar-brand text-light text-center " href="{% url 'dashboard' %}">
+        <a class="navbar-brand text-light text-center m-0 mb-1" href="{% url 'dashboard' %}">
           <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
           MoonPortfolio  
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="nav-link active text-light mt-2" href="{% url 'dashboard' %}">Portfolio</a>
+
+        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          💼 Portfolios
+        </a>
+        <div class="collapse mx-3" id="collapseExample">
+          {% for all_portfolio in all_portfolio %}
+            {% if all_portfolio.user_id == request.user.id %}
+              <a class="nav-link active text-light" href="{% url 'dashboard' all_portfolio.name %}">{{ all_portfolio.name }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+
+        <a class="nav-link text-light mx-2 my-2" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
+          📜 Transactions
+        </a>
+
+        <a class="nav-link text-light mx-2 my-2" href="{% url 'market_simplified' %}" target="_blank">
+          ⚖ Market
+        </a>
+
+        <a class="nav-link text-light mx-2 my-2" href="{% url 'blog' %}" target="_blank">
+          🗂 Blog
+        </a>
+
+        <a class="nav-link text-light mx-2 my-2" href="{% url 'profile' %}" target="_blank">
+          ⚙ Profile settings
+        </a>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">📜 Transaction History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body text-center">
+                <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
+                  <thead>
+                      <tr>
+                          <th scope='col'>Type</th>
+                          <th scope='col'>Asset</th>
+                          <th scope='col'>Amount</th>
+                          <th scope='col'>Price Per Coin</th>
+                          <th scope='col'>Total</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% if transactions %}
+                          {% for transaction in transactions %}
+                              <tr>
+                                  <td class='align-middle'>{{ transaction.transaction_type }}</td>
+                                  <td class='align-middle'>{{ transaction.asset_name }}</td>
+                                  <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
+                                  <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
+                                  <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
+                              </tr>
+                          {% endfor %}
+                      {% endif %}
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </nav>
     </div>
     
+
     <div class="col p-0 mb-5">
-      <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(30, 30, 30);">
-      <div class="container">
-          
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'dashboard' %}">Portfolio</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'market_simplified' %}">Market</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'blog' %}">Blog</a>
-                  </li>
-              </ul>
-          </div>
-          
-          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-              <ul class="nav justify-content-end">
-                  <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle text-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user }}</a>
-                      <div class="dropdown-menu">
-                          <a class="dropdown-item" href="{% url 'profile' %}">Profile settings</a>
-                          <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="{% url 'logoutPage' %}">Logout</a>
-                      </div>
-                  </li>
-              </ul>
-          </div>
 
-        </div>
-
-    
-      </nav>
-      
-      <div class="row mt-4 mb-5 mx-4">
-        
+      <!-- ___________________________________________ROW 1___________________________________________-->
+      <div class="row mt-2 mx-4">
         <h1>Select your Portfolio !</h1>
 
         {% for portfolio in portfolios %}
-        
-          <a class="btn btn-primary" href="{% url 'dashboard' portfolio.name %}">{{ portfolio.name }}</a>
+          
+          <a class="btn btn-primary btn-lg" href="{% url 'dashboard' portfolio.name %}">{{ portfolio.name }}</a>
         
         {% endfor %}
 
@@ -100,6 +142,7 @@ MoonPortfolio
           </div>
         </h2>
       </div>
+      <!-- ___________________________________________END ROW 1___________________________________________-->
 
     </div>
   </div>
