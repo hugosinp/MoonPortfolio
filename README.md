@@ -43,7 +43,9 @@ Now, Monke can check all of his assets activity in one place and consult the Coi
 | Consulting the Coin Market                                       | M |:white_check_mark:|
 | Consulting Coin Details                                          | M |:white_check_mark:|
 | Creating a portfolio                                             | M |:white_check_mark:|
-| Adding Asset Transactions (Buy, Sell, Convert, Transfer)         | M |:x:|
-| Overviewing transactions and dashboard                           | M |:x:|
+| Adding Asset Transactions (Buy, Sell)                            | M |:white_check_mark:|
+| Overviewing transactions and dashboard                           | M |:white_check_mark:|
+| Editing transactions                                             | M |:x:|
+| Improving UX                                                     | M |:x:|
 | Interacting with in the blog (Create, Modify, Delete, Comment)   | S |:x:|
 | Modifying and Customize Profile                                  | S |:x:|
