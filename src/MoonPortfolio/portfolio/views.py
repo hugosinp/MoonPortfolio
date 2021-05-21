@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, F, FloatField
 import requests
@@ -11,33 +11,41 @@ from .forms import PortfolioForm, TransactionForm
 
 @login_required(login_url='login')
 def dashboard(request):
-    
+
+    #CoinGecko API URL
+    url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
+    coin_api = requests.get(url).json
+
     portfolios = Portfolio.objects.all().filter(user=request.user)
 
-    form = PortfolioForm()
+    portfolio_form = PortfolioForm()
 
     if request.method == 'POST':
 
-        form = PortfolioForm(request.POST)
+        portfolio_form = PortfolioForm(request.POST)
 
-        if form.is_valid():
+        if portfolio_form.is_valid():
 
-            instance = form.save()
+            instance = portfolio_form.save()
             instance.user = request.user
             instance.save()
 
-            return redirect('dashboard/'+instance.name)
+            return redirect('dashboard/'+instance.id)
 
     else:
-        form = PortfolioForm()
+        portfolio_form = PortfolioForm()
 
-    context = {'form' : form, 'portfolios': portfolios}
+    context = {
+                'portfolio_form' : portfolio_form,
+                'portfolios': portfolios,
+                'coin_api': coin_api
+            }
 
     return render(request, 'portfolio/dashboard.html', context)
 
 
 @login_required(login_url='login')
-def dashboard2(request, portfolio_name):
+def dashboard2(request, portfolio_id):
 
     #CoinGecko API URL
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
@@ -82,8 +90,9 @@ def dashboard2(request, portfolio_name):
     all_portfolio = Portfolio.objects.all()
     #All current user portfolios
     user_portfolios = Portfolio.objects.all().filter(user=request.user)
+
     #Current portfolio data
-    current_portfolio = Portfolio.objects.filter(user=request.user).get(name=portfolio_name)
+    current_portfolio = Portfolio.objects.get(id=portfolio_id)
     
     #All current portfolio transactions
     transactions = Transaction.objects.all().filter(portfolio_id=current_portfolio.id)
@@ -152,15 +161,15 @@ def dashboard2(request, portfolio_name):
 
 
     #Transaction Form
-    form = TransactionForm()
+    transaction_form = TransactionForm()
 
     if request.method == 'POST':
 
-        form = TransactionForm(request.POST)
+        transaction_form = TransactionForm(request.POST)
 
-        if form.is_valid():
+        if transaction_form.is_valid():
 
-            instance = form.save()
+            instance = transaction_form.save()
 
             instance.portfolio = current_portfolio
             if instance.transaction_type == "Buy":
@@ -174,14 +183,52 @@ def dashboard2(request, portfolio_name):
                 
             instance.save()
 
-            return redirect('/portfolio/dashboard/'+current_portfolio.name)
+            return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
 
     else:
-        form = TransactionForm()
+        transaction_form = TransactionForm()
+
+
+    #Portfolio Creation Form
+    portfolio_form = PortfolioForm()
+
+    if request.method == 'POST':
+
+        portfolio_form = PortfolioForm(request.POST)
+
+        if portfolio_form.is_valid():
+
+            instance = portfolio_form.save()
+            instance.user = request.user
+            instance.save()
+
+            return redirect('/portfolio/dashboard/'+str(instance.id))
+
+    else:
+        portfolio_form = PortfolioForm()
+
+
+    #Portfolio Modify Form
+    portfolio_modify_form = PortfolioForm()
+    
+    if request.method == 'POST':
+        instance = Portfolio.objects.get(id=portfolio_id)
+        portfolio_modify_form = PortfolioForm(request.POST, instance=instance)
+
+        if portfolio_modify_form.is_valid():
+
+            portfolio_modify_form.save()
+
+            return redirect('/portfolio/dashboard')
+
+    else:
+        portfolio_modify_form = PortfolioForm()
 
 
     context = {
-                'form': form,
+                'transaction_form': transaction_form,
+                'portfolio_form': portfolio_form,
+                'portfolio_modify_form': portfolio_modify_form,
                 'all_portfolio': all_portfolio,
                 'current_portfolio': current_portfolio, 
                 'transactions': transactions, 
@@ -194,3 +241,21 @@ def dashboard2(request, portfolio_name):
             }
 
     return render(request, 'portfolio/indepth_dashboard.html', context)
+
+
+@login_required(login_url='login')
+def edit_portfolio(request, portfolio_id):
+
+    this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
+
+
+    return redirect('/portfolio/dashboard')
+
+
+@login_required(login_url='login')
+def delete_portfolio(request, portfolio_id):
+
+    this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
+    this_portofolio.delete()
+
+    return redirect('/portfolio/dashboard')

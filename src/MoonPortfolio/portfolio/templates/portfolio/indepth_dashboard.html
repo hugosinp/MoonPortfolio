@@ -4,7 +4,7 @@
 {% load mathfilters %}
 
 {% block title %}
-MoonPortfolio | Dashboard
+MoonPortfolio | {{ current_portfolio.name }} Dashboard
 {% endblock %}
 
 {% block styles %}
@@ -12,12 +12,13 @@ MoonPortfolio | Dashboard
 
 {% block body %}
 
-<div class="container mx-0 m-0">
+<div class="container-fluid mx-0 m-0">
   <div class="row">
+  
     <div class="col-2 bg-dark p-0">
-
-      <nav class="nav flex-column navbar-expand-lg py-2">
-        <a class="navbar-brand text-light text-center m-0 mb-1" href="{% url 'dashboard' %}">
+    
+      <nav class="nav flex-column sticky-top navbar-expand-lg py-2">
+        <a class="navbar-brand text-light mx-4" href="{% url 'dashboard' %}">
           <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
           MoonPortfolio  
         </a>
@@ -25,17 +26,20 @@ MoonPortfolio | Dashboard
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapsePortfolio" role="button" aria-expanded="false" aria-controls="collapsePortfolio">
           💼 Portfolios
         </a>
-        <div class="collapse mx-3" id="collapseExample">
+        <div class="collapse mx-3" id="collapsePortfolio">
           {% for all_portfolio in all_portfolio %}
             {% if all_portfolio.user_id == request.user.id %}
-              <a class="nav-link active text-light" href="{% url 'dashboard' all_portfolio.name %}">{{ all_portfolio.name }}</a>
+              <a class="nav-link active text-light" href="{% url 'dashboard' all_portfolio.id %}">{{ all_portfolio.name }}</a>
             {% endif %}
           {% endfor %}
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPortfolio">
+            <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add a portfolio !
+          </button>
         </div>
-
 
         <a class="nav-link text-light mx-2 my-2" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
           📜 Transactions
@@ -49,68 +53,28 @@ MoonPortfolio | Dashboard
           🗂 Blog
         </a>
 
-        <a class="nav-link text-light mx-2 my-2" href="{% url 'profile' %}" target="_blank">
-          ⚙ Profile settings
+        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapseProfile" role="button" aria-expanded="false" aria-controls="collapseProfile">
+          🤡 Profile
         </a>
+        <div class="collapse mx-3" id="collapseProfile">
+          <a class="nav-link active text-light" href="{% url 'profile' %}">⚙ Profile settings</a>
+          <a class="nav-link active text-light" href="{% url 'logoutPage' %}">⬅ Logout</a>
 
 
-        <!-- Modal -->
-        <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">📜 Transaction History</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <div class="modal-body text-center">
-                <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
-                  <thead>
-                      <tr>
-                          <th scope='col'>Type</th>
-                          <th scope='col'>Asset</th>
-                          <th scope='col'>Amount</th>
-                          <th scope='col'>Price Per Coin</th>
-                          <th scope='col'>Total</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% if transactions %}
-                          {% for transaction in transactions %}
-                              <tr>
-                                  <td class='align-middle'>{{ transaction.transaction_type }}</td>
-                                  <td class='align-middle'>{{ transaction.asset_name }}</td>
-                                  <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
-                                  <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
-                                  <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
-                              </tr>
-                          {% endfor %}
-                      {% endif %}
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </nav>
     </div>
     
 
     <div class="col p-0 mb-5">
-
       <!-- ___________________________________________ROW 1___________________________________________-->
       <div class="row mt-2 mx-4">
         
         <h1>
           {{ current_portfolio.name }} Dashboard
-          <!-- Button trigger modal -->
+
           <button type="button " class="btn btn-primary float-end m-2" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
             <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add Transaction !
-          </button>
+          </button>    
 
           <!-- Modal -->
           <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -123,7 +87,7 @@ MoonPortfolio | Dashboard
                 <div class="modal-body text-center">
                   <form action="" method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    {{ transaction_form.as_p }}
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -133,10 +97,13 @@ MoonPortfolio | Dashboard
               </div>
             </div>
           </div>
+          <button type="button " class="btn btn-primary float-end m-2" data-bs-toggle="modal" data-bs-target="#portfolioModifyModal">
+            ⚙
+          </button>      
         </h1>
 
         <!-- _____________________________Card 1_____________________________-->
-        <div class="col-4 mt-5">
+        <div class="col-4 mt-3">
           <div class="card" style="width: 100%;">
             <div class="card-body m-2" id="group">
               <h3 class="card-title">Current Balance 💰</h3>
@@ -199,13 +166,13 @@ MoonPortfolio | Dashboard
           </div>
         </div>
 
-        <div class="col mt-5">
+        <div class="col mt-3">
 
           <div class="card" style="width: 100%;">
             <div class="card-body m-2">
               <h3 class="card-title">Your Assets 📈</h3>
               
-              <table class="table table-hover " id="coins" cellspacing="0" width="100%">
+              <table class="table table-hover table-responsive" id="coins" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th scope='col'>Name</th>
@@ -220,7 +187,7 @@ MoonPortfolio | Dashboard
                         <td class='align-middle'>
                         {% for coin in coin_data %}
                           {% if coin.symbol|upper == holding.asset_name %}
-                            <a style="text-decoration: none; color: black;" href="{% url 'asset' coin.symbol %}" target="_blank">
+                            <a style="text-decoration: none; color: black;" href="{% url 'asset' coin.symbol|lower %}" target="_blank">
                               <img src={{ coin.image }} height='30' style="padding-right: 10%;">
                               <span class="fw-bold">{{ coin.name }}</span>
                               <span class="text-secondary">{{ holding.asset_name }}</span>
@@ -290,6 +257,94 @@ MoonPortfolio | Dashboard
 
     </div>
   </div>
+
+  <!-- ___________________________________________MODALS___________________________________________-->
+  <!-- Modal -->
+  <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="transactionHistoryModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="transactionHistoryModal">📜 Transaction History</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center">
+          <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th scope='col'>Type</th>
+                    <th scope='col'>Asset</th>
+                    <th scope='col'>Amount</th>
+                    <th scope='col'>Price Per Coin</th>
+                    <th scope='col'>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if transactions %}
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td class='align-middle'>{{ transaction.transaction_type }}</td>
+                            <td class='align-middle'>{{ transaction.asset_name }}</td>
+                            <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
+                            <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
+                            <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="createPortfolio" tabindex="-1" aria-labelledby="createPortfolioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createPortfolioLabel">Choose a name for your Portfolio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <form action="" method="POST">
+            {% csrf_token %}
+            {{ portfolio_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Save">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="portfolioModifyModal" tabindex="-1" aria-labelledby="portfolioModifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="portfolioModifyModalLabel">Change your Portfolio name !</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <form action="" method="POST">
+            {% csrf_token %}
+            {{ portfolio_modify_form.as_p }}                    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Save">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 {% endblock %}

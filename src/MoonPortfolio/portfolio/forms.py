@@ -15,7 +15,7 @@ class TransactionForm(forms.ModelForm):
         fields = ['transaction_type', 'asset_name', 'amount', 'price_per_coin']
         labels = {
             "transaction_type" : "Transaction Type",
-            "asset_name" : "Asset name",
-            "amount" : "Coin Amount",
+            "asset_name" : "Asset",
+            "amount" : "Quantity",
             "price_per_coin" : "Price Per Coin",
         }

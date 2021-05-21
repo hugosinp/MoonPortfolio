@@ -1,4 +1,4 @@
-{% extends 'home/base_nonav.html' %}
+{% extends 'home/base_logged.html' %}
 {% load static %}
 {% load humanize %}
 {% load mathfilters %}
@@ -12,140 +12,116 @@ MoonPortfolio | Dashboard
 
 {% block body %}
 
-<div class="container mx-0 m-0">
-  <div class="row">
-    <div class="col-2 bg-dark p-0">
+<div class="container-flex m-5">
 
-      <nav class="nav flex-column navbar-expand-lg py-2">
-        <a class="navbar-brand text-light text-center m-0 mb-1" href="{% url 'dashboard' %}">
-          <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
-          MoonPortfolio  
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+  <div class="row m-5">
 
-        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-          💼 Portfolios
-        </a>
-        <div class="collapse mx-3" id="collapseExample">
-          {% for all_portfolio in all_portfolio %}
-            {% if all_portfolio.user_id == request.user.id %}
-              <a class="nav-link active text-light" href="{% url 'dashboard' all_portfolio.name %}">{{ all_portfolio.name }}</a>
-            {% endif %}
-          {% endfor %}
-        </div>
+    <!-- ___________________________________________ROW 1___________________________________________-->
+    <div class="row mb-5">
+      <h1>Your Portfolios</h1>
 
-
-        <a class="nav-link text-light mx-2 my-2" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
-          📜 Transactions
-        </a>
-
-        <a class="nav-link text-light mx-2 my-2" href="{% url 'market_simplified' %}" target="_blank">
-          ⚖ Market
-        </a>
-
-        <a class="nav-link text-light mx-2 my-2" href="{% url 'blog' %}" target="_blank">
-          🗂 Blog
-        </a>
-
-        <a class="nav-link text-light mx-2 my-2" href="{% url 'profile' %}" target="_blank">
-          ⚙ Profile settings
-        </a>
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">📜 Transaction History</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <div class="modal-body text-center">
-                <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
-                  <thead>
-                      <tr>
-                          <th scope='col'>Type</th>
-                          <th scope='col'>Asset</th>
-                          <th scope='col'>Amount</th>
-                          <th scope='col'>Price Per Coin</th>
-                          <th scope='col'>Total</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% if transactions %}
-                          {% for transaction in transactions %}
-                              <tr>
-                                  <td class='align-middle'>{{ transaction.transaction_type }}</td>
-                                  <td class='align-middle'>{{ transaction.asset_name }}</td>
-                                  <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
-                                  <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
-                                  <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
-                              </tr>
-                          {% endfor %}
-                      {% endif %}
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </div>
-    
-
-    <div class="col p-0 mb-5">
-
-      <!-- ___________________________________________ROW 1___________________________________________-->
-      <div class="row mt-2 mx-4">
-        <h1>Select your Portfolio !</h1>
-
+      <table class="table table-hover"cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th scope='col'>Name</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for portfolio in portfolios %}
-          
-          <a class="btn btn-primary btn-lg" href="{% url 'dashboard' portfolio.name %}">{{ portfolio.name }}</a>
-        
+          <tr>  
+              <td class='align-middle'>
+                <a class="btn btn-primary btn-lg" href="{% url 'dashboard' portfolio.id %}">{{ portfolio.name }}</a>
+                <a class="btn btn-danger btn-lg" href="{% url 'delete_portfolio' portfolio.id %}">❌</a>
+              </td>
+          </tr>
         {% endfor %}
+        </tbody>
+      </table>
 
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Get started !
-          </button>
 
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Choose a name for your Portfolio</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                  <form action="" method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    
-                  
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <input type="submit" class="btn btn-primary" value="Save">
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </h2>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPortfolioModal">
+        <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center"> Add a Portfolio !
+      </button>
+
+
+    </div>
+    <!-- ___________________________________________END ROW 1___________________________________________-->
+    <!-- ___________________________________________ROW 2___________________________________________-->
+    <div class="row">
+      <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Name</th>
+                <th scope='col'>Price / 24h Change</th>
+                <th scope='col'>Market Cap</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% if coin_api %}
+            {% for coin in coin_api %}
+                <tr>
+                    <td class='align-middle'>{{ coin.market_cap_rank }}</td>
+                    <td class='align-middle'>
+                        <a style="text-decoration: none; color: white;" href="asset/{{ coin.symbol }}" target="_blank">
+                            <img src={{ coin.image }} height='40' style="padding-right: 3%;">
+                            <span class="fw-bold">{{ coin.name }}</span> 
+                            <span class="badge bg-dark text-uppercase text-light">{{ coin.symbol }}</span> 
+                        </a>
+                    </td>
+                    <td class='align-middle'>
+                        {{ coin.current_price|intcomma }} $USD 
+                        {% if coin.price_change_percentage_24h >= 0 %}
+                            <span class="text-success" style="color=green;">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                            <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
+                        {% elif coin.price_change_percentage_24h < 0 %}
+                            <span class="text-danger">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                            <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
+                        {% endif %}
+                    </td>
+                    <td class='align-middle'>{{ coin.market_cap|intcomma }} $USD</td>
+                </tr>
+            {% endfor %}
+          {% else %}
+              <h3>No data from CoinGecko</h3>
+          {% endif %}
+
+        </tbody>
+      </table>
+    </div>
+    <!-- ___________________________________________END ROW 2___________________________________________-->
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="createPortfolioModal" tabindex="-1" aria-labelledby="createPortfolioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createPortfolioModalLabel">Choose a name for your Portfolio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <form action="" method="POST">
+            {% csrf_token %}
+            {{ portfolio_form.as_p }}                    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Save">
+          </form>
+        </div>
       </div>
-      <!-- ___________________________________________END ROW 1___________________________________________-->
-
     </div>
   </div>
+
 </div>
 
+<script>
+    $(document).ready(function () {
+        $('#coins').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 {% endblock %}
