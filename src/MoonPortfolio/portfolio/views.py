@@ -1,6 +1,6 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, F, FloatField
+from django.db.models import Sum, F
 import requests
 
 import json
@@ -10,7 +10,7 @@ from .models import Holding, Portfolio, Transaction, Coin
 from .forms import PortfolioForm, TransactionForm
 
 @login_required(login_url='login')
-def dashboard(request):
+def dashboard_selection(request):
 
     #CoinGecko API URL
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
@@ -45,7 +45,7 @@ def dashboard(request):
 
 
 @login_required(login_url='login')
-def dashboard2(request, portfolio_id):
+def dashboard(request, portfolio_id):
 
     #CoinGecko API URL
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
@@ -86,8 +86,6 @@ def dashboard2(request, portfolio_id):
                 atl=coin["atl"]
             )
 
-    #All portfolios data
-    all_portfolio = Portfolio.objects.all()
     #All current user portfolios
     user_portfolios = Portfolio.objects.all().filter(user=request.user)
 
@@ -224,14 +222,17 @@ def dashboard2(request, portfolio_id):
     else:
         portfolio_modify_form = PortfolioForm()
 
+    #Transactions dict into a reversed list to get last transactions
+    last_transactions = list(reversed(list(transactions)))
 
     context = {
                 'transaction_form': transaction_form,
                 'portfolio_form': portfolio_form,
                 'portfolio_modify_form': portfolio_modify_form,
-                'all_portfolio': all_portfolio,
+                'user_portfolios': user_portfolios,
                 'current_portfolio': current_portfolio, 
-                'transactions': transactions, 
+                'transactions': last_transactions,
+                'last_transactions': last_transactions[0:5], 
                 'asset_names': asset_names,
                 'holdings_percentages': holdings_percentages,
                 'user_holdings': user_holdings,
@@ -259,3 +260,11 @@ def delete_portfolio(request, portfolio_id):
     this_portofolio.delete()
 
     return redirect('/portfolio/dashboard')
+
+
+@login_required(login_url='login')
+def holding_details(request, portfolio_id, holding_id):
+
+    context = {}
+
+    return render(request, 'portfolio/holding.html', context)

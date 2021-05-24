@@ -14,44 +14,123 @@
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
 
-        <link href="/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <!-- XDSoft DateTimePicker -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
         <link rel="icon" href="{% static 'img/moon.png' %}">
         {% block styles %}{% endblock %}
     </head>
 
     <body>
+        <div class="container-fluid mx-0 m-0">
+            <div class="row">
+                <div class="col-2 bg-dark">
+                    <nav class="nav flex-column sticky-top navbar-expand-lg py-3">
+                        <a class="navbar-brand text-light mx-4" href="{% url 'dashboard' %}">
+                        <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
+                        MoonPortfolio  
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                        </button>
 
+                        <a class="nav-link active text-light mx-2 my-2" data-bs-toggle="collapse" href="#collapsePortfolio" role="button" aria-expanded="false" aria-controls="collapsePortfolio">
+                        💼 Portfolios
+                        </a>
+                        <div class="collapse mx-3" id="collapsePortfolio">
+                        {% for user_portfolio in user_portfolios %}
+                            <a class="nav-link active text-light" href="{% url 'dashboard' user_portfolio.id %}">{{ user_portfolio.name }}</a>
+                        {% endfor %}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPortfolio">
+                            <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add a portfolio !
+                        </button>
+                        </div>
 
+                        <a class="nav-link text-light mx-2 my-2" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
+                        📜 Transactions
+                        </a>
+
+                        <a class="nav-link text-light mx-2 my-2" href="{% url 'market_simplified' %}" target="_blank">
+                        ⚖ Market
+                        </a>
+
+                        <a class="nav-link text-light mx-2 my-2" href="{% url 'blog' %}" target="_blank">
+                        🗂 Blog
+                        </a>
+
+                        <a class="nav-link active text-light mx-2 my-2 sticky-bottom" href="" data-bs-toggle="modal" data-bs-target="#portfolioModifyModal">
+                        ⚙ Settings
+                        </a>
+
+                        <a class="nav-link active text-light mx-2 my-2 sticky-bottom" data-bs-toggle="collapse" href="#collapseProfile" role="button" aria-expanded="false" aria-controls="collapseProfile">
+                        🤡 Profile
+                        </a>
+
+                        <div class="collapse mx-3" id="collapseProfile">
+                        <a class="nav-link active text-light" href="{% url 'profile' %}"> Profile settings</a>
+                        <a class="nav-link active text-light" href="{% url 'logoutPage' %}">⬅ Logout</a>
+
+                    </nav>
+                </div>
+
+                <div class="col p-0" style="background-color: rgb(180, 217, 253);">
+
+                    <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top">
+                        <div class="container-fluid mx-4">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                    <li class="nav-item dropdown">
+                                        <a class="navbar-brand fw-bold dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {{ current_portfolio.name }} Dashboard
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            {% for user_portfolio in user_portfolios %}
+                                                <li><a class="dropdown-item" href="{% url 'dashboard' user_portfolio.id %}">{{ user_portfolio.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <form class="d-flex">
+                                    <button type="button " class="btn btn-primary float-end m-2" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+                                        <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add Transaction !
+                                    </button>    
+                                </form>
+                            </div>
+                        </div>
+                    </nav>
+                    <!-- Modal -->
+                    <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add a new Transaction</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                {{ transaction_form.as_p }}
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Save">
+                            </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>    
         {% block body %}
         {% endblock %}
 
 
-        <footer class="text-center text-white" style="background-color: rgb(38, 38, 38);">
-        <!-- Grid container -->
-        <div class="container p-4 pb-0 mb-4">
-            <!-- Section: Social media -->
-            <section class="mb-4">
-
-                <!-- Linkedin -->
-                <a href="https://www.linkedin.com/in/hugo-sinprasith-1b5367199/" target="blank"><img src="{% static 'img/linkedin.png' %}" alt="" width="40" height="40"></a>
-
-                <!-- Github -->
-                <a href="https://github.com/hugosinp" target="blank"><img src="{% static 'img/github.png' %}" alt="" width="40" height="40"></a>
-
-            </section>
-            <!-- Section: Social media -->
-            <div class="text-center fst-italic" style="color: rgba(255, 255, 255, 0.2);">
-                Powered By CoinGecko and TradingView
-            </div>
-        </div>
-        <!-- Grid container -->
-
-        <!-- Copyright -->
-        <div class="text-center p-3" style="background-color: rgb(30, 30, 30);">
-            Hugo SINPRASITH © 2021 
-        </div>
-        <!-- Copyright -->
-        </footer>
 
     </body>
 </html>

@@ -46,6 +46,7 @@ Now, Monke can check all of his assets activity in one place and consult the Coi
 | Adding Asset Transactions (Buy, Sell)                            | M |:white_check_mark:|
 | Overviewing transactions and dashboard                           | M |:white_check_mark:|
 | Editing transactions                                             | M |:x:|
+| Consulting Historical Data                                       | M |:x:|
 | Improving UX                                                     | M |:x:|
 | Interacting with in the blog (Create, Modify, Delete, Comment)   | S |:x:|
 | Modifying and Customize Profile                                  | S |:x:|
