@@ -7,5 +7,5 @@ urlpatterns = [
     #path('edit_portfolio/<int:portfolio_id>/', views.edit_portfolio, name='edit_portfolio'),
     path('delete_portfolio/<int:portfolio_id>/', views.delete_portfolio, name='delete_portfolio'),
 
-    path('dashboard/<int:portfolio_id>/<int:holding_id>', views.holding_details, name='holding')
+    path('dashboard/<int:portfolio_id>/<int:holding_id>', views.holding_details, name='holding_details')
 ]

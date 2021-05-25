@@ -30,7 +30,7 @@ def dashboard_selection(request):
             instance.user = request.user
             instance.save()
 
-            return redirect('dashboard/'+instance.id)
+            return redirect('dashboard/'+str(instance.id))
 
     else:
         portfolio_form = PortfolioForm()
@@ -265,6 +265,27 @@ def delete_portfolio(request, portfolio_id):
 @login_required(login_url='login')
 def holding_details(request, portfolio_id, holding_id):
 
-    context = {}
+    #CoinGecko API URL
+    url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
+    coin_api = requests.get(url).json
+
+    #All current user portfolios
+    user_portfolios = Portfolio.objects.all().filter(user=request.user)
+
+    #Current portfolio data
+    current_portfolio = Portfolio.objects.get(id=portfolio_id)
+
+    #All current portfolio holdings
+    user_holdings = Holding.objects.filter(portfolio_id = current_portfolio)
+
+    current_holding = Holding.objects.get(id=holding_id)
+
+    context = {
+        'user_portfolios': user_portfolios,
+        'current_portfolio': current_portfolio, 
+        'user_holdings': user_holdings,
+        'current_holding': current_holding,
+        'coin_api': coin_api,
+    }
 
     return render(request, 'portfolio/holding.html', context)

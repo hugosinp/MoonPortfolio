@@ -47,7 +47,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                             <p class="card-text fw-bold">
                               ${{ coin.current_price|floatformat:"4" }}
                               {% if coin.price_change_percentage_24h >= 0 %}
-                                <span class="badge bg-success text-light" style="color=green;">+{{ coin.price_change_percentage_24h|floatformat:"2" }}%
+                                <span class="badge bg-success text-light" style="color: rgb(159, 232, 35);">+{{ coin.price_change_percentage_24h|floatformat:"2" }}%
                                   <img src="{% static 'img/up.png' %}" alt="" width="15" height="15">
                                 </span>
                               {% elif coin.price_change_percentage_24h < 0 %}

@@ -113,10 +113,10 @@ MoonPortfolio | Market
                                 <td class='align-middle'>
                                     {{ coin.current_price|intcomma }} $USD 
                                     {% if coin.price_change_percentage_24h >= 0 %}
-                                        <span class="text-success" style="color=green;">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                                        <span style="color: rgb(153, 255, 153);">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
                                         <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
                                     {% elif coin.price_change_percentage_24h < 0 %}
-                                        <span class="text-danger">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                                        <span style="color: rgb(255, 102, 102);">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
                                         <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
                                     {% endif %}
                                 </td>
