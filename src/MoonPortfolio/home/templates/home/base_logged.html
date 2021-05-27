@@ -21,10 +21,10 @@
 
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(30, 30, 30);">
+        <nav class="navbar navbar-expand-lg bg-dark">
             <div class="container ms-5">
               
-                <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <a class="navbar-brand text-light" href="{% url 'dashboard' %}">
                     <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                     MoonPortfolio  
                 </a>
@@ -35,13 +35,13 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dashboard' %}">Portfolio</a>
+                            <a class="nav-link text-light" href="{% url 'dashboard' %}">Portfolio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'market_simplified' %}">Market</a>
+                            <a class="nav-link text-light" href="{% url 'market_simplified' %}">Market</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                            <a class="nav-link text-light" href="{% url 'blog' %}">Blog</a>
                         </li>
                     </ul>
                 </div>
@@ -49,14 +49,14 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                     <ul class="nav justify-content-end">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+
+                            <a class="nav-link fw-bold dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ request.user }}
                             </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{% url 'profile' %}">⚙ Profile settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{% url 'logoutPage' %}">⬅ Logout</a>
-                            </div>
+                            <ul class="dropdown-menu bg-dark" style="opacity:0.99;" aria-labelledby="navbarDropdown">
+                                <a class="nav-link active text-light" href="{% url 'profile' %}"> Profile settings</a>
+                                <a class="nav-link active text-light" href="{% url 'logoutPage' %}">⬅ Logout</a>
+                            </ul>
                         </li>
                     </ul>
                 </div>

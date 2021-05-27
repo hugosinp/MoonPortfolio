@@ -1,0 +1,14 @@
+html{
+    font-family: 'Montserrat', sans-serif;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    background-color: saddlebrown;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}

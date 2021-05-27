@@ -16,6 +16,9 @@ class Holding(models.Model):
     total_asset_price = models.FloatField(default=0)
     current_value = models.FloatField(default=0)
 
+    def __str__(self):
+        string = str(self.portfolio.user)+" "+self.asset_name+" "+str(self.current_value)
+        return string
 
 class Transaction(models.Model):
 
@@ -33,7 +36,8 @@ class Transaction(models.Model):
     total = models.FloatField(default=0)
 
     def __str__(self):
-        return str(self.transaction_type)
+        string = str(self.portfolio.user)+" "+self.transaction_type+" "+self.asset_name+" "+str(self.amount)
+        return string
 
 class Coin(models.Model):
 

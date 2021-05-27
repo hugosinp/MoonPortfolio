@@ -222,6 +222,10 @@ def dashboard(request, portfolio_id):
     else:
         portfolio_modify_form = PortfolioForm()
 
+    #Formatting Transactions Dates
+    for transaction in transactions:
+        transaction.transaction_date = transaction.transaction_date.strftime('%m/%d/%Y')
+
     #Transactions dict into a reversed list to get last transactions
     last_transactions = list(reversed(list(transactions)))
 
@@ -263,6 +267,15 @@ def delete_portfolio(request, portfolio_id):
 
 
 @login_required(login_url='login')
+def delete_transaction(request, portfolio_id, holding_id, transaction_id):
+
+    this_transaction = Transaction.objects.all().filter(id=transaction_id)
+    this_transaction.delete()
+
+    return redirect('/portfolio/dashboard/'+str(portfolio_id)+'/'+str(holding_id))
+
+
+@login_required(login_url='login')
 def holding_details(request, portfolio_id, holding_id):
 
     #CoinGecko API URL
@@ -280,12 +293,72 @@ def holding_details(request, portfolio_id, holding_id):
 
     current_holding = Holding.objects.get(id=holding_id)
 
+    #All current holding transactions
+    holding_transactions = Transaction.objects.all().filter(portfolio_id=current_portfolio.id).filter(asset_name=current_holding.asset_name)
+
+    #Price sum order by asset_name (total price per coin)
+    price_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('total')).filter(portfolio_id=current_portfolio.id)
+
+    initial = 0.0
+
+    for price in price_sum_per_coin:
+        if(current_holding.asset_name == price['asset_name']):
+            initial = price['total__sum']
+
+    profit_loss = current_holding.current_value - initial
+
+    date = []
+    amount = []
+    total_price = []
+
+    for holding in holding_transactions:
+        date.append(holding.transaction_date.strftime('%m/%d/%Y'))
+        amount.append(holding.amount)
+        total_price.append(holding.total)
+
+    #Transaction Form
+    transaction_form = TransactionForm()
+
+    if request.method == 'POST':
+
+        transaction_form = TransactionForm(request.POST)
+
+        if transaction_form.is_valid():
+
+            instance = transaction_form.save()
+
+            instance.portfolio = current_portfolio
+            if instance.transaction_type == "Buy":
+                instance.total = instance.amount * instance.price_per_coin
+            elif instance.transaction_type == "Sell":
+                negative_amount = "-"+str(instance.amount)
+                negative_total = "-"+str(instance.amount)
+                instance.amount = float(negative_amount)
+                instance.total = float(negative_total)
+                instance.total = instance.amount * instance.price_per_coin
+                
+            instance.save()
+
+            return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
+
+    else:
+        transaction_form = TransactionForm()
+
+
     context = {
         'user_portfolios': user_portfolios,
         'current_portfolio': current_portfolio, 
         'user_holdings': user_holdings,
         'current_holding': current_holding,
+        'holding_transactions': holding_transactions,
+        'profit_loss': profit_loss,
+        'initial': initial,
+        'transaction_form': transaction_form,
         'coin_api': coin_api,
+
+        'date': date,
+        'total_price': total_price,
+        'amount': amount
     }
 
     return render(request, 'portfolio/holding.html', context)
