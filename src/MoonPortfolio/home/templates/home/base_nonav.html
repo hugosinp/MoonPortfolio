@@ -35,31 +35,31 @@
                 <div class="container">
                     <ul class="sidebar-nav">
                         <li>
-                            <a class="text-light" href="{% url 'dashboard' %}">
+                            <a class="text-light fw-bold" href="{% url 'dashboard' %}">
                                 <img src="{% static 'img/moon.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                                 <span class="px-3 fw-bold">MoonPortfolio</span>  
                             </a>
                         </li>
                         <li>
-                            <a class="text-light" href="{% url 'dashboard' current_portfolio.id %}">
+                            <a class="text-light fw-bold" href="{% url 'dashboard' current_portfolio.id %}">
                                 <img src="{% static 'img/desktop.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                                 <span class="px-3">Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a class="text-light" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
+                            <a class="text-light fw-bold" href="" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">
                                 <img src="{% static 'img/file.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                                 <span class="px-3">Transaction</span>
                             </a>
                         </li>
                         <li>
-                            <a class="text-light" href="" data-bs-toggle="modal" data-bs-target="#portfolioModifyModal">
+                            <a class="text-light fw-bold" href="" data-bs-toggle="modal" data-bs-target="#portfolioModifyModal">
                                 <img src="{% static 'img/settings.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                                 <span class="px-3">Settings</span>
                             </a>
                         </li>                
                         <li>
-                            <a class="text-light" href="{% url 'profile' %}">
+                            <a class="text-light fw-bold" href="{% url 'profile' %}">
                                 <img src="{% static 'img/user.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                                 <span class="px-3">Profile</span>
                             </a>

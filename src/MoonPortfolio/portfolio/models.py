@@ -5,9 +5,14 @@ from django.conf import settings
 class Portfolio(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=50)
+    top_performance_name = models.CharField(max_length=200, null=True, blank=True)
+    top_performance_value =models.FloatField(default=0)
+    worst_performance_name = models.CharField(max_length=200, null=True, blank=True)
+    worst_performance_value = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.name)
+
 
 class Holding(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, null=True, blank=True)
@@ -19,6 +24,7 @@ class Holding(models.Model):
     def __str__(self):
         string = str(self.portfolio.user)+" "+self.asset_name+" "+str(self.current_value)
         return string
+
 
 class Transaction(models.Model):
 

@@ -96,7 +96,7 @@ def dashboard(request, portfolio_id):
     transactions = Transaction.objects.all().filter(portfolio_id=current_portfolio.id)
 
     #All current portfolio holdings
-    user_holdings = Holding.objects.filter(portfolio_id = current_portfolio)
+    user_holdings = Holding.objects.all().filter(portfolio_id = current_portfolio)
 
     #Amount sum order by asset_name (total amount per coin)
     amount_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('amount')).filter(portfolio_id=current_portfolio.id)
@@ -111,148 +111,173 @@ def dashboard(request, portfolio_id):
     #All coin data
     coin_data = Coin.objects.all()
     
+    if request.user == current_portfolio.user :
 
-    #Updates or creates the total asset amount in Holding Table
-    for amount in amount_sum_per_coin:
-        this_holding = Holding.objects.filter(portfolio_id = current_portfolio).filter(asset_name = amount['asset_name'])
+        #Updates or creates the total asset amount in Holding Table
+        for amount in amount_sum_per_coin:
+            this_holding = Holding.objects.filter(portfolio_id = current_portfolio).filter(asset_name = amount['asset_name'])
 
-        if this_holding.exists():
-            this_holding.filter(asset_name = amount['asset_name']).update(
-                total_asset_amount = amount['amount__sum'],
+            if this_holding.exists():
+                this_holding.filter(asset_name = amount['asset_name']).update(
+                    total_asset_amount = amount['amount__sum'],
+                )
+
+            else:
+                holding_record = Holding.objects.create(
+                    portfolio=current_portfolio,
+                    asset_name=amount['asset_name'],
+                    total_asset_amount = amount['amount__sum'], 
+                )
+
+        #Updates the total price amount in Holding Table
+        for price in price_sum_per_coin:
+            this_holding = Holding.objects.filter(portfolio_id = current_portfolio).filter(asset_name = price['asset_name'])
+
+            if this_holding.exists():
+                this_holding.filter(asset_name = price['asset_name']).update(
+                    total_asset_price = price['total__sum']
+                )
+
+        #Updates the asset current value (total_asset_amount*asset current price)
+        for coin in coin_data:
+            user_holdings.filter(asset_name=coin.symbol).update(
+                current_value = F('total_asset_amount') * coin.current_price
             )
 
-        else:
-            holding_record = Holding.objects.create(
-                portfolio=current_portfolio,
-                asset_name=amount['asset_name'],
-                total_asset_amount = amount['amount__sum'], 
-            )
+        #Pie chart Data
+        asset_names = []
+        holdings_percentages = []
 
-    #Updates the total price amount in Holding Table
-    for price in price_sum_per_coin:
-        this_holding = Holding.objects.filter(portfolio_id = current_portfolio).filter(asset_name = price['asset_name'])
+        for holding in user_holdings:
+            asset_names.append(holding.asset_name)
 
-        if this_holding.exists():
-            this_holding.filter(asset_name = price['asset_name']).update(
-                total_asset_price = price['total__sum']
-            )
-
-    #Updates the asset current value (total_asset_amount*asset current price)
-    for coin in coin_data:
-        user_holdings.filter(asset_name=coin.symbol).update(
-            current_value = F('total_asset_amount') * coin.current_price
-        )
-
-    #Pie chart Data
-    asset_names = []
-    holdings_percentages = []
-
-    for holding in user_holdings:
-        asset_names.append(holding.asset_name)
-
-        if current_balance['current_value__sum'] is None:
-            percentage = 100
-            holdings_percentages.append(percentage)
-        elif current_balance['current_value__sum'] != 0:
-            percentage = holding.current_value/current_balance['current_value__sum']*100
-            holdings_percentages.append(percentage)
+            if current_balance['current_value__sum'] is None:
+                percentage = 100
+                holdings_percentages.append(percentage)
+            elif current_balance['current_value__sum'] != 0:
+                percentage = holding.current_value/current_balance['current_value__sum']*100
+                holdings_percentages.append(percentage)
 
 
-    #Transaction Form
-    transaction_form = TransactionForm()
-
-    if request.method == 'POST':
-
-        transaction_form = TransactionForm(request.POST)
-
-        if transaction_form.is_valid():
-
-            instance = transaction_form.save()
-
-            instance.portfolio = current_portfolio
-            if instance.transaction_type == "Buy":
-                instance.total = instance.amount * instance.price_per_coin
-            elif instance.transaction_type == "Sell":
-                negative_amount = "-"+str(instance.amount)
-                negative_total = "-"+str(instance.amount)
-                instance.amount = float(negative_amount)
-                instance.total = float(negative_total)
-                instance.total = instance.amount * instance.price_per_coin
-                
-            instance.save()
-
-            return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
-
-    else:
+        #Transaction Form
         transaction_form = TransactionForm()
 
+        if request.method == 'POST':
 
-    #Portfolio Creation Form
-    portfolio_form = PortfolioForm()
+            transaction_form = TransactionForm(request.POST)
 
-    if request.method == 'POST':
+            if transaction_form.is_valid():
 
-        portfolio_form = PortfolioForm(request.POST)
+                instance = transaction_form.save()
 
-        if portfolio_form.is_valid():
+                instance.portfolio = current_portfolio
+                if instance.transaction_type == "Buy":
+                    instance.total = instance.amount * instance.price_per_coin
+                elif instance.transaction_type == "Sell":
+                    negative_amount = "-"+str(instance.amount)
+                    negative_total = "-"+str(instance.amount)
+                    instance.amount = float(negative_amount)
+                    instance.total = float(negative_total)
+                    instance.total = instance.amount * instance.price_per_coin
+                    
+                instance.save()
 
-            instance = portfolio_form.save()
-            instance.user = request.user
-            instance.save()
+                return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
 
-            return redirect('/portfolio/dashboard/'+str(instance.id))
+        else:
+            transaction_form = TransactionForm()
 
-    else:
+        #Portfolio Creation Form
         portfolio_form = PortfolioForm()
 
+        if request.method == 'POST':
 
-    #Portfolio Modify Form
-    portfolio_modify_form = PortfolioForm()
-    
-    if request.method == 'POST':
-        instance = Portfolio.objects.get(id=portfolio_id)
-        portfolio_modify_form = PortfolioForm(request.POST, instance=instance)
+            portfolio_form = PortfolioForm(request.POST)
 
-        if portfolio_modify_form.is_valid():
+            if portfolio_form.is_valid():
 
-            portfolio_modify_form.save()
+                instance = portfolio_form.save()
+                instance.user = request.user
+                instance.save()
 
-            return redirect('/portfolio/dashboard')
+                return redirect('/portfolio/dashboard/'+str(instance.id))
 
-    else:
+        else:
+            portfolio_form = PortfolioForm()
+
+        #Portfolio Modify Form
         portfolio_modify_form = PortfolioForm()
+        
+        if request.method == 'POST':
+            instance = Portfolio.objects.get(id=portfolio_id)
+            portfolio_modify_form = PortfolioForm(request.POST, instance=instance)
 
-    #Formatting Transactions Dates
-    for transaction in transactions:
-        transaction.transaction_date = transaction.transaction_date.strftime('%m/%d/%Y')
+            if portfolio_modify_form.is_valid():
 
-    #Transactions dict into a reversed list to get last transactions
-    last_transactions = list(reversed(list(transactions)))
+                portfolio_modify_form.save()
 
-    context = {
-                'transaction_form': transaction_form,
-                'portfolio_form': portfolio_form,
-                'portfolio_modify_form': portfolio_modify_form,
-                'user_portfolios': user_portfolios,
-                'current_portfolio': current_portfolio, 
-                'transactions': last_transactions,
-                'last_transactions': last_transactions[0:5], 
-                'asset_names': asset_names,
-                'holdings_percentages': holdings_percentages,
-                'user_holdings': user_holdings,
-                'current_balance': current_balance,
-                'total': total_invested,
-                'coin_data': coin_data
-            }
+                return redirect('/portfolio/dashboard')
 
-    return render(request, 'portfolio/indepth_dashboard.html', context)
+        else:
+            portfolio_modify_form = PortfolioForm()
+
+
+        #Formatting Transactions Dates
+        for transaction in transactions:
+            transaction.transaction_date = transaction.transaction_date.strftime('%m/%d/%Y')
+
+        #Transactions dict into a reversed list to get last transactions
+        last_transactions = list(reversed(list(transactions)))
+
+        #Profit/Loss
+        initial = 0.0
+        coin_performance_dict = {}
+
+        for price in price_sum_per_coin:
+            for holding in user_holdings:
+                if(holding.asset_name == price['asset_name']):
+                    initial = price['total__sum']
+                    profit_loss = holding.current_value - initial
+
+                    coin_performance_dict.update({holding.asset_name: profit_loss})
+
+        #Check if coin_performance_dict is empty
+        if not coin_performance_dict:
+            print("Empty dict")
+        
+        else:
+            maximum = max(coin_performance_dict, key=coin_performance_dict.get)
+            minimum = min(coin_performance_dict, key=coin_performance_dict.get)
+
+            #Updating the min and max to the Portfolio table
+            user_portfolios.filter(id=portfolio_id).update(top_performance_name=maximum)
+            user_portfolios.filter(id=portfolio_id).update(top_performance_value=coin_performance_dict[maximum])
+            user_portfolios.filter(id=portfolio_id).update(worst_performance_name=minimum)
+            user_portfolios.filter(id=portfolio_id).update(worst_performance_value=coin_performance_dict[minimum])
+
+        context = {
+                    'transaction_form': transaction_form,
+                    'portfolio_form': portfolio_form,
+                    'portfolio_modify_form': portfolio_modify_form,
+                    'user_portfolios': user_portfolios,
+                    'current_portfolio': current_portfolio, 
+                    'transactions': last_transactions,
+                    'last_transactions': last_transactions[0:5], 
+                    'asset_names': asset_names,
+                    'holdings_percentages': holdings_percentages,
+                    'user_holdings': user_holdings,
+                    'current_balance': current_balance,
+                    'total': total_invested,
+                    'coin_data': coin_data
+                }
+
+        return render(request, 'portfolio/indepth_dashboard.html', context)
 
 
 @login_required(login_url='login')
 def edit_portfolio(request, portfolio_id):
 
     this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
-
 
     return redirect('/portfolio/dashboard')
 
@@ -261,18 +286,23 @@ def edit_portfolio(request, portfolio_id):
 def delete_portfolio(request, portfolio_id):
 
     this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
-    this_portofolio.delete()
 
-    return redirect('/portfolio/dashboard')
+    if request.user == this_portofolio.user:
+        this_portofolio.delete()
+
+        return redirect('/portfolio/dashboard')
 
 
 @login_required(login_url='login')
 def delete_transaction(request, portfolio_id, holding_id, transaction_id):
 
+    this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
     this_transaction = Transaction.objects.all().filter(id=transaction_id)
-    this_transaction.delete()
 
-    return redirect('/portfolio/dashboard/'+str(portfolio_id)+'/'+str(holding_id))
+    if request.user == this_portofolio.user:
+        this_transaction.delete()
+
+        return redirect('/portfolio/dashboard/'+str(portfolio_id)+'/'+str(holding_id))
 
 
 @login_required(login_url='login')
@@ -289,7 +319,7 @@ def holding_details(request, portfolio_id, holding_id):
     current_portfolio = Portfolio.objects.get(id=portfolio_id)
 
     #All current portfolio holdings
-    user_holdings = Holding.objects.filter(portfolio_id = current_portfolio)
+    user_holdings = Holding.objects.all().filter(portfolio_id = current_portfolio)
 
     current_holding = Holding.objects.get(id=holding_id)
 
@@ -299,66 +329,69 @@ def holding_details(request, portfolio_id, holding_id):
     #Price sum order by asset_name (total price per coin)
     price_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('total')).filter(portfolio_id=current_portfolio.id)
 
-    initial = 0.0
+    if request.user == current_portfolio.user :
 
-    for price in price_sum_per_coin:
-        if(current_holding.asset_name == price['asset_name']):
-            initial = price['total__sum']
+        #Profit/Loss
+        initial = 0.0
 
-    profit_loss = current_holding.current_value - initial
+        for price in price_sum_per_coin:
+            if(current_holding.asset_name == price['asset_name']):
+                initial = price['total__sum']
 
-    date = []
-    amount = []
-    total_price = []
+        profit_loss = current_holding.current_value - initial
 
-    for holding in holding_transactions:
-        date.append(holding.transaction_date.strftime('%m/%d/%Y'))
-        amount.append(holding.amount)
-        total_price.append(holding.total)
+        date = []
+        amount = []
+        total_price = []
 
-    #Transaction Form
-    transaction_form = TransactionForm()
+        for holding in holding_transactions:
+            date.append(holding.transaction_date.strftime('%m/%d/%Y'))
+            amount.append(holding.amount)
+            total_price.append(holding.total)
 
-    if request.method == 'POST':
-
-        transaction_form = TransactionForm(request.POST)
-
-        if transaction_form.is_valid():
-
-            instance = transaction_form.save()
-
-            instance.portfolio = current_portfolio
-            if instance.transaction_type == "Buy":
-                instance.total = instance.amount * instance.price_per_coin
-            elif instance.transaction_type == "Sell":
-                negative_amount = "-"+str(instance.amount)
-                negative_total = "-"+str(instance.amount)
-                instance.amount = float(negative_amount)
-                instance.total = float(negative_total)
-                instance.total = instance.amount * instance.price_per_coin
-                
-            instance.save()
-
-            return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
-
-    else:
+        #Transaction Form
         transaction_form = TransactionForm()
 
+        if request.method == 'POST':
 
-    context = {
-        'user_portfolios': user_portfolios,
-        'current_portfolio': current_portfolio, 
-        'user_holdings': user_holdings,
-        'current_holding': current_holding,
-        'holding_transactions': holding_transactions,
-        'profit_loss': profit_loss,
-        'initial': initial,
-        'transaction_form': transaction_form,
-        'coin_api': coin_api,
+            transaction_form = TransactionForm(request.POST)
 
-        'date': date,
-        'total_price': total_price,
-        'amount': amount
-    }
+            if transaction_form.is_valid():
 
-    return render(request, 'portfolio/holding.html', context)
+                instance = transaction_form.save()
+
+                instance.portfolio = current_portfolio
+                if instance.transaction_type == "Buy":
+                    instance.total = instance.amount * instance.price_per_coin
+                elif instance.transaction_type == "Sell":
+                    negative_amount = "-"+str(instance.amount)
+                    negative_total = "-"+str(instance.amount)
+                    instance.amount = float(negative_amount)
+                    instance.total = float(negative_total)
+                    instance.total = instance.amount * instance.price_per_coin
+                    
+                instance.save()
+
+                return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
+
+        else:
+            transaction_form = TransactionForm()
+
+
+        context = {
+            'user_portfolios': user_portfolios,
+            'current_portfolio': current_portfolio, 
+            'user_holdings': user_holdings,
+            'current_holding': current_holding,
+            'holding_transactions': holding_transactions,
+            'profit_loss': profit_loss,
+            'initial': initial,
+            'transaction_form': transaction_form,
+            'coin_api': coin_api,
+
+            'date': date,
+            'total_price': total_price,
+            'amount': amount
+        }
+
+        return render(request, 'portfolio/holding.html', context)
