@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% load mathfilters %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 MoonPortfolio | Dashboard
@@ -49,46 +50,77 @@ MoonPortfolio | Dashboard
     <!-- ___________________________________________END ROW 1___________________________________________-->
     <!-- ___________________________________________ROW 2___________________________________________-->
     <div class="row">
-      <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th scope='col'>#</th>
-                <th scope='col'>Name</th>
-                <th scope='col'>Price / 24h Change</th>
-                <th scope='col'>Market Cap</th>
-            </tr>
-        </thead>
-        <tbody>
-          {% if coin_api %}
-            {% for coin in coin_api %}
-                <tr>
-                    <td class='align-middle'>{{ coin.market_cap_rank }}</td>
-                    <td class='align-middle'>
-                        <a style="text-decoration: none; color: white;" href="asset/{{ coin.symbol }}" target="_blank">
-                            <img src={{ coin.image }} height='40' style="padding-right: 3%;">
-                            <span class="fw-bold">{{ coin.name }}</span> 
-                            <span class="badge bg-dark text-uppercase text-light">{{ coin.symbol }}</span> 
-                        </a>
-                    </td>
-                    <td class='align-middle'>
-                        {{ coin.current_price|intcomma }} $USD 
-                        {% if coin.price_change_percentage_24h >= 0 %}
-                            <span class="text-success" style="color=green;">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
-                            <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
-                        {% elif coin.price_change_percentage_24h < 0 %}
-                            <span class="text-danger">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
-                            <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
-                        {% endif %}
-                    </td>
-                    <td class='align-middle'>{{ coin.market_cap|intcomma }} $USD</td>
-                </tr>
-            {% endfor %}
-          {% else %}
-              <h3>No data from CoinGecko</h3>
-          {% endif %}
+      <h1>Gainers & Losers (Last 24h)</h1>
 
-        </tbody>
-      </table>
+        <div id="carouselExampleControls" class="carousel slide my-4" data-bs-ride="carousel">
+        
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="row row-cols-3 row-cols-md-5">
+                {% for gainer in gainers_dict_list %}
+                  <div class="col">
+                    <div class="card shadow-sm cardanimation" style="border-radius: 50px;">
+                      <div class="card-body m-2">
+
+                        <a style="text-decoration: none; color: black;" href="{% url 'asset' gainer.symbol|lower %}">
+                          <h4 class="card-title">
+                            {{ gainer.asset_name }}
+                            {% for coin in coin_data %}
+                              {% if gainer.asset_name == coin.name %}
+                                <img src="{{ coin.image }}" style="height:25%; width:15%; object-fit: contain;" alt="Responsive image">
+                              {% endif %}
+                            {% endfor %}
+                          </h4>
+                          <h4 class="fw-bold text-secondary">${{ gainer.current_price |floatformat:"2" }}</h4>
+                          <h3 class="fw-bold text-success">+{{ gainer.price_change_percentage_24h |floatformat:"2" }}%</h3>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="row row-cols-3 row-cols-md-5">
+                {% for loser in losers_dict_list %}
+                  <div class="col">
+                    <div class="card shadow-sm cardanimation" style="border-radius: 50px;">
+                      <div class="card-body m-2">
+
+                        <a style="text-decoration: none; color: black;" href="{% url 'asset' loser.symbol|lower %}">
+                          <h4 class="card-title">
+                            {{ loser.asset_name }}
+                            {% for coin in coin_data %}
+                              {% if loser.asset_name == coin.name %}
+                                <img src="{{ coin.image }}" style="height:25%; width:15%; object-fit: contain;" alt="Responsive image">
+                              {% endif %}
+                            {% endfor %}
+                          </h4>
+                          <h4 class="fw-bold text-secondary">${{ loser.current_price |floatformat:"2" }}</h4>
+                          <h3 class="fw-bold text-danger">{{ loser.price_change_percentage_24h |floatformat:"2" }}%</h3>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+          </div>
+
+          <button class="w-1 carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+
     </div>
     <!-- ___________________________________________END ROW 2___________________________________________-->
 
@@ -105,7 +137,7 @@ MoonPortfolio | Dashboard
         <div class="modal-body text-center">
           <form action="" method="POST">
             {% csrf_token %}
-            {{ portfolio_form.as_p }}                    
+            {{ portfolio_form|crispy }}                    
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

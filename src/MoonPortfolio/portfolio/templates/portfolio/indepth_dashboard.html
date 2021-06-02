@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block title %}
-  MoonPortfolio | {{ current_portfolio.name }} Dashboard
+{{ current_portfolio.name }} Dashboard | MoonPortfolio 
 {% endblock %}
 
 
@@ -96,62 +96,62 @@
           <div style="position: relative; height: 450px; overflow: auto; display: block;">
             <table class="table table-hover table-responsive" id="coins" cellspacing="0" width="100%">
               <thead>
-                  <tr>
-                      <th scope='col'>Name</th>
-                      <th scope='col'>Price/24h Change</th>
-                      <th scope='col'>Holdings</th>
-                  </tr>
+                <tr>
+                  <th scope='col'>Name</th>
+                  <th scope='col'>Price/24h Change</th>
+                  <th scope='col'>Holdings</th>
+                </tr>
               </thead>
 
               <tbody>
                 {% for holding in user_holdings %}
                   <tr>
-                      <td class='align-middle'>
+                    <td class='align-middle'>
+                    {% for coin in coin_data %}
+                      {% if coin.symbol|upper == holding.asset_name %}
+                        <a style="text-decoration: none; color: black;" href="{% url 'asset' coin.symbol|lower %}" target="_blank">
+                          <img src={{ coin.image }} height='30' style="padding-right: 10%;">
+                          <span class="fw-bold">{{ coin.name }}</span>
+                          <span class="text-secondary">{{ holding.asset_name }}</span>
+                        </a>
+                      {% endif %}
+                    {% endfor %}
+                    </td>
+                    
+                    <td class='align-middle'>
                       {% for coin in coin_data %}
                         {% if coin.symbol|upper == holding.asset_name %}
-                          <a style="text-decoration: none; color: black;" href="{% url 'asset' coin.symbol|lower %}" target="_blank">
-                            <img src={{ coin.image }} height='30' style="padding-right: 10%;">
-                            <span class="fw-bold">{{ coin.name }}</span>
-                            <span class="text-secondary">{{ holding.asset_name }}</span>
-                          </a>
+                          ${{ coin.current_price|floatformat:"2" }}
+                          {% if coin.price_change_percentage_24h >= 0 %}
+                              <span class="text-success" style="color=green;">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                              <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
+                          {% elif coin.price_change_percentage_24h < 0 %}
+                              <span class="text-danger">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                              <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
+                          {% endif %}
                         {% endif %}
                       {% endfor %}
-                      </td>
-                      
-                      <td class='align-middle'>
-                        {% for coin in coin_data %}
-                          {% if coin.symbol|upper == holding.asset_name %}
-                            ${{ coin.current_price|floatformat:"2" }}
-                            {% if coin.price_change_percentage_24h >= 0 %}
-                                <span class="text-success" style="color=green;">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
-                                <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
-                            {% elif coin.price_change_percentage_24h < 0 %}
-                                <span class="text-danger">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
-                                <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
-                            {% endif %}
-                          {% endif %}
-                        {% endfor %}
-                      </td>
+                    </td>
 
-                      <td class='align-middle'>
-                        <a style="text-decoration: none; color: black;" href="{% url 'holding_details' current_portfolio.id holding.id %}">
-                          <span class="fw-bold">
-                            {% for coin in coin_data %}
-                              {% if coin.symbol|upper == holding.asset_name %}
-                                ${{ holding.current_value|floatformat:"2" }}
-                              {% endif %}
-                            {% endfor %}
-                          </span>
-                          </br>
-                          <span class="text-secondary"> 
-                            {% for coin in coin_data %}
-                              {% if coin.symbol|upper == holding.asset_name %}
-                                {{ holding.total_asset_amount|floatformat:"2" }} {{ holding.asset_name }}
-                              {% endif %}
-                            {% endfor %}
-                          </span>
-                        </a>
-                      </td>
+                    <td class='align-middle'>
+                      <a style="text-decoration: none; color: black;" href="{% url 'holding_details' current_portfolio.id holding.id %}">
+                        <span class="fw-bold">
+                          {% for coin in coin_data %}
+                            {% if coin.symbol|upper == holding.asset_name %}
+                              ${{ holding.current_value|floatformat:"2" }}
+                            {% endif %}
+                          {% endfor %}
+                        </span>
+                        </br>
+                        <span class="text-secondary"> 
+                          {% for coin in coin_data %}
+                            {% if coin.symbol|upper == holding.asset_name %}
+                              {{ holding.total_asset_amount|floatformat:"2" }} {{ holding.asset_name }}
+                            {% endif %}
+                          {% endfor %}
+                        </span>
+                      </a>
+                    </td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -229,33 +229,33 @@
           
           <table class="table table-hover" id="coins" cellspacing="0" width="100%" >
             <thead>
-                <tr>
-                    <th scope='col'>Date</th>
-                    <th scope='col'>Type</th>
-                    <th scope='col'>Asset</th>
-                    <th scope='col'>Amount</th>
-                    <th scope='col'>Price Per Coin</th>
-                    <th scope='col'>Total</th>
-                </tr>
+              <tr>
+                <th scope='col'>Date</th>
+                <th scope='col'>Type</th>
+                <th scope='col'>Asset</th>
+                <th scope='col'>Amount</th>
+                <th scope='col'>Price Per Coin</th>
+                <th scope='col'>Total</th>
+              </tr>
             </thead>
             <tbody>
               {% if transactions %}
-                  {% for transaction in last_transactions %}
-                      <tr>
-                          <td class='align-middle'>{{ transaction.transaction_date }}</td>
-                          <td class='align-middle'>{{ transaction.transaction_type }}</td>
-                          <td class='align-middle'>{{ transaction.asset_name }}</td>
-                          <td class='align-middle'>
-                            {% if transaction.transaction_type == "Buy" %}
-                              <span class="text-success">+{{ transaction.amount }} {{ transaction.asset_name }}</span>
-                            {% elif transaction.transaction_type == "Sell" %}
-                              <span class="text-danger">{{ transaction.amount }} {{ transaction.asset_name }}</span>
-                            {% endif %}
-                            </td>
-                          <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
-                          <td class='align-middle fw-bold'>{{ transaction.total|floatformat:"2" }} $</td>
-                      </tr>
-                  {% endfor %}
+                {% for transaction in last_transactions %}
+                  <tr>
+                    <td class='align-middle'>{{ transaction.transaction_date }}</td>
+                    <td class='align-middle'>{{ transaction.transaction_type }}</td>
+                    <td class='align-middle'>{{ transaction.asset_name }}</td>
+                    <td class='align-middle'>
+                      {% if transaction.transaction_type == "Buy" %}
+                        <span class="text-success">+{{ transaction.amount }} {{ transaction.asset_name }}</span>
+                      {% elif transaction.transaction_type == "Sell" %}
+                        <span class="text-danger">{{ transaction.amount }} {{ transaction.asset_name }}</span>
+                      {% endif %}
+                      </td>
+                    <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
+                    <td class='align-middle fw-bold'>{{ transaction.total|floatformat:"2" }} $</td>
+                  </tr>
+                {% endfor %}
               {% endif %}
             </tbody>
           </table>              
@@ -302,28 +302,28 @@
         <div class="modal-body text-center m-1">
           <table class="table table-hover" id="coins" cellspacing="0" width="100%" >
             <thead>
-                <tr>
-                    <th scope='col'>Date</th>
-                    <th scope='col'>Type</th>
-                    <th scope='col'>Asset</th>
-                    <th scope='col'>Amount</th>
-                    <th scope='col'>Price Per Coin</th>
-                    <th scope='col'>Total</th>
-                </tr>
+              <tr>
+                <th scope='col'>Date</th>
+                <th scope='col'>Type</th>
+                <th scope='col'>Asset</th>
+                <th scope='col'>Amount</th>
+                <th scope='col'>Price Per Coin</th>
+                <th scope='col'>Total</th>
+              </tr>
             </thead>
             <tbody>
-                {% if transactions %}
-                    {% for transaction in transactions %}
-                        <tr>
-                            <td class='align-middle'>{{ transaction.transaction_date }}</td>
-                            <td class='align-middle'>{{ transaction.transaction_type }}</td>
-                            <td class='align-middle'>{{ transaction.asset_name }}</td>
-                            <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
-                            <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
-                            <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+              {% if transactions %}
+                {% for transaction in transactions %}
+                  <tr>
+                    <td class='align-middle'>{{ transaction.transaction_date }}</td>
+                    <td class='align-middle'>{{ transaction.transaction_type }}</td>
+                    <td class='align-middle'>{{ transaction.asset_name }}</td>
+                    <td class='align-middle'>{{ transaction.amount }} {{ transaction.asset_name }}</td>
+                    <td class='align-middle'>{{ transaction.price_per_coin }} $ </td>
+                    <td class='align-middle'>{{ transaction.total|floatformat:"2" }} $</td>
+                  </tr>
+                {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>

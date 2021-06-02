@@ -4,9 +4,9 @@ from django.db.models import Sum, F
 import requests
 
 import json
+import heapq
 
 from .models import Holding, Portfolio, Transaction, Coin
-
 from .forms import PortfolioForm, TransactionForm
 
 @login_required(login_url='login')
@@ -14,9 +14,49 @@ def dashboard_selection(request):
 
     #CoinGecko API URL
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
-    coin_api = requests.get(url).json
+    coin_api = requests.get(url)
+    coin_data = requests.get(url).json()
 
     portfolios = Portfolio.objects.all().filter(user=request.user)
+
+    input_list = []
+
+    gainers_dict_list = []
+    losers_dict_list = []
+
+    for coin in coin_api.json():
+
+        input_list.append(coin['price_change_percentage_24h'])
+        number_of_elements = 5
+        largest_list = heapq.nlargest(number_of_elements, input_list)
+        smallest_list = heapq.nsmallest(number_of_elements, input_list)
+        
+
+    for coin in coin_api.json():
+        for largest in largest_list:
+            if largest == coin['price_change_percentage_24h']:
+                this_dict = {
+                    "asset_name": coin['name'],
+                    "symbol": coin['symbol'],
+                    "current_price": coin['current_price'],
+                    "price_change_percentage_24h": coin['price_change_percentage_24h']
+                }
+                
+                gainers_dict_list.append(this_dict)
+
+        for smallest in smallest_list:
+            if smallest == coin['price_change_percentage_24h']:
+                this_dict = {
+                    "asset_name": coin['name'],
+                    "symbol": coin['symbol'],
+                    "current_price": coin['current_price'],
+                    "price_change_percentage_24h": coin['price_change_percentage_24h']
+                }
+                
+                losers_dict_list.append(this_dict)
+
+    gainers_dict_list = sorted(gainers_dict_list, key = lambda i: i['price_change_percentage_24h'],reverse=True)
+    losers_dict_list = sorted(losers_dict_list, key = lambda i: i['price_change_percentage_24h'],reverse=False)
 
     portfolio_form = PortfolioForm()
 
@@ -38,7 +78,9 @@ def dashboard_selection(request):
     context = {
                 'portfolio_form' : portfolio_form,
                 'portfolios': portfolios,
-                'coin_api': coin_api
+                'coin_data': coin_data,
+                'gainers_dict_list': gainers_dict_list[0:5],
+                'losers_dict_list': losers_dict_list[0:5],
             }
 
     return render(request, 'portfolio/dashboard.html', context)
@@ -111,6 +153,7 @@ def dashboard(request, portfolio_id):
     #All coin data
     coin_data = Coin.objects.all()
     
+
     if request.user == current_portfolio.user :
 
         #Updates or creates the total asset amount in Holding Table
@@ -277,7 +320,7 @@ def dashboard(request, portfolio_id):
 @login_required(login_url='login')
 def edit_portfolio(request, portfolio_id):
 
-    this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
+    this_portofolio = Portfolio.objects.get(id=portfolio_id)
 
     return redirect('/portfolio/dashboard')
 
@@ -285,9 +328,10 @@ def edit_portfolio(request, portfolio_id):
 @login_required(login_url='login')
 def delete_portfolio(request, portfolio_id):
 
-    this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
+    this_portofolio = Portfolio.objects.get(id=portfolio_id)
 
     if request.user == this_portofolio.user:
+
         this_portofolio.delete()
 
         return redirect('/portfolio/dashboard')
@@ -329,7 +373,7 @@ def holding_details(request, portfolio_id, holding_id):
     #Price sum order by asset_name (total price per coin)
     price_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('total')).filter(portfolio_id=current_portfolio.id)
 
-    if request.user == current_portfolio.user :
+    if request.user == current_portfolio.user:
 
         #Profit/Loss
         initial = 0.0

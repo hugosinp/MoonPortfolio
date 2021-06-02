@@ -67,4 +67,10 @@
     transition: 0.1s;
 }
     
-
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 50px;
+  width: 50px;
+  border-radius: 25%;
+  border: 1px solid black;
+}
