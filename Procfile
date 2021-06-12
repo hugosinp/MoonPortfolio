@@ -1,0 +1,1 @@
+web: gunicorn MoonPortfolio.wsgi --log-file -
