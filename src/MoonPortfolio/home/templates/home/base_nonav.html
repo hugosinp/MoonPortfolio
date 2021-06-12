@@ -41,8 +41,8 @@
                                 <span class="px-3 fw-bold">MoonPortfolio</span>  
                             </a>
                         </li>
-                        <li>
-                            <a class="text-light fw-bold" href="{% url 'dashboard' current_portfolio.id %}">
+                        <li style="background:rgb(0, 0, 0); border-radius: 20px;">
+                            <a class="text-light fw-bold" href="{% url 'dashboard' current_portfolio.id %}" >
                                 <img src="{% static 'img/desktop.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
                                 <span class="px-3">Dashboard</span>
                             </a>
@@ -103,8 +103,8 @@
                                         </ul>
 
                                         <ul class="nav navbar-nav ms-auto">
-                                            <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
-                                                <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add Transaction !
+                                            <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#addTransactionModal" style="border-radius: 25px;">
+                                                <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Add Transaction
                                             </button>
                                         </ul>
                                     </div>

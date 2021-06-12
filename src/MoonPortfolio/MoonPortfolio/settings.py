@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-'+ get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['moonportfolio.herokuapp.com', 'localhost']
 
 LOGIN_REDIRECT_URL='/portfolio/dashboard'
 LOGOUT_REDIRECT_URL = '/'

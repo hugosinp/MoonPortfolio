@@ -10,62 +10,64 @@ MoonPortfolio
 {% endblock %}
 
 {% block body %}
-<div class="container mb-5">
-  <div class="row m-5 mb-5">
-  
-    <div class="container mb-5">
-      <div class="row mt-5 mb-5">
+  <div class="container mb-5">
+    <div class="row m-5 mb-5">
+    
+      <div class="container mb-5">
+        <div class="row mt-5 mb-5">
 
-        <div class="col-5 mt-5">
-          <h1 class="fw-bold">The Best Crypto Asset Manager</h1>
-          <h5>
-              User-Friendly Asset Manager which allows users to easily manage their assets whatever the broker is !</br></br>
-              Control and Overview your expenses and profits with advanced visuals !
-          </h5>
-          </br>
-          <a class="btn btn-primary" href="{% url 'register' %}">Get started !</a>
-        </div>
-        <div class="col">
-          <img src="{% static 'img/wallet.svg' %}" alt="" width="120%" height="100%" class="d-inline-block align-text-top">
-        </div>
+          <div class="col-5 mt-5">
+            <h1 class="fw-bold">The Best Crypto Asset Manager</h1>
+            <h5>
+                User-Friendly Asset Manager which allows users to easily manage their assets whatever the broker is !</br></br>
+                Control and Overview your expenses and profits with advanced visuals !
+            </h5>
+            </br>
+            <a class="btn btn-primary" href="{% url 'register' %}">Get started !</a>
+          </div>
+          <div class="col">
+            <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+            <lottie-player src="https://assets2.lottiefiles.com/private_files/lf30_dnshkwsb.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+            <img src="{% static 'img/wallet.svg' %}" alt="" width="120%" height="100%" class="d-inline-block align-text-top">
+          </div>
 
-      </div>  
-    </div>
+        </div>  
+      </div>
 
-  </div>
-</div>
-
-<div class="container bg-dark rounded-pill mb-5">
-  <div class="row m-5 mb-5">
-
-    <div class="container text-light m-5">
-      <div class="row">
-
-        <div class="col ps-5 pt-4 pb-4 ms-5 mt-5 mb-5">
-          <h1 class="fw-bold">Visit the Marketplace !</h1>
-          <h5>A free to use MarketPlace for Amateur to Pro Crypto Holders
-              with all assets wealth indicators
-          </br>
-          </h5>
-          </br>
-          <a class="btn btn-primary" href="{% url 'market_simplified' %}">Go to MarketPlace !</a>
-        </div>
-        <div class="col-4 text-center m-5">
-          <img src="{% static 'img/markett.png' %}" alt="" width="55%" height="90%" class="d-inline-block align-text-top">
-        </div>
-
-      </div>  
     </div>
   </div>
-</div>
+
+  <div class="container bg-dark rounded-pill mb-5">
+    <div class="row m-5 mb-5">
+
+      <div class="container text-light m-5">
+        <div class="row">
+
+          <div class="col ps-5 pt-4 pb-4 ms-5 mt-5 mb-5">
+            <h1 class="fw-bold">Visit the Marketplace !</h1>
+            <h5>
+              A free to use MarketPlace for Amateur to Pro Crypto Holders with all assets wealth indicators
+              </br>
+            </h5>
+            </br>
+            <a class="btn btn-primary" href="{% url 'market_simplified' %}">Go to MarketPlace !</a>
+          </div>
+          <div class="col-4 text-center m-5">
+            <img src="{% static 'img/markett.png' %}" alt="" width="55%" height="90%" class="d-inline-block align-text-top">
+          </div>
+
+        </div>  
+      </div>
+    </div>
+  </div>
 
 
-<script>
-  $(document).ready(function () {
-    $('#coins').DataTable();
-    $('.dataTables_length').addClass('bs-select');
-  });
-</script>
+  <script>
+    $(document).ready(function () {
+      $('#coins').DataTable();
+      $('.dataTables_length').addClass('bs-select');
+    });
+  </script>
 {% endblock %}
 
 

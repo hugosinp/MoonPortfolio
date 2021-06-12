@@ -17,10 +17,10 @@
 
 {% block body %}
   <!-- ___________________________________________ROW 1___________________________________________-->
-  <div class="row mt-4 mx-4">
+  <div class="row mt-3 mx-4">
     <!-- _____________________________Card 1_____________________________-->
     <div class="col-4 mt-3">
-      <div class="card shadow" style="width: 100%; border-radius: 50px;">
+      <div class="card shadow" style="width: 100%; border-radius: 30px;">
         <div class="card-body m-3" id="group">
           <h3 class="card-title">Current Balance 💰</h3>
           <h1 class="fw-bold">
@@ -36,7 +36,7 @@
             </button>
           </p>
           <div class="collapse show" id="pieChart">
-            <div class="card card-body shadow-sm" style="max-height:400px; border-radius: 50px;">
+            <div class="card card-body shadow-sm" style="max-height:400px; border-radius: 30px;">
 
               <canvas id="myChart" width="100%" height="100%" style="max-height: 300px; min-height: 300px;"></canvas>
               <script>
@@ -47,8 +47,8 @@
                     datasets: [{
                       data: {{ holdings_percentages|safe }},
                       backgroundColor: [
-                        '#6a4c93',
                         '#1982c4',
+                        '#6a4c93',
                         '#8ac926',
                         '#ffca3a',
                         '#ff595e',
@@ -74,10 +74,10 @@
           </div>
 
           <div class="collapse" id="totals">
-            <div class="card card-body" style="border-radius: 50px;">
+            <div class="card card-body" style="border-radius: 30px;">
               <h3 class="card-title">Total Profit/Loss</h3>
             </div>
-            <div class="card card-body" style="border-radius: 50px;">
+            <div class="card card-body" style="border-radius: 30px;">
               <h3 class="card-title">Total Invested</h3>
               <h1 class="fw-bold">${{ total.total__sum|floatformat:"2" }}</h1>
             </div>
@@ -90,7 +90,7 @@
 
     <div class="col mt-3">
 
-      <div class="card shadow" style="width: 100%; border-radius: 50px;">
+      <div class="card shadow" style="width: 100%; border-radius: 30px;">
         <div class="card-body m-3">
           <h3 class="card-title">Your Assets 📈</h3>
           <div style="position: relative; height: 450px; overflow: auto; display: block;">
@@ -172,7 +172,7 @@
       <div class="row">
 
         <div class="col">
-          <div class="card shadow-sm cardanimation" style="border-radius: 50px;">
+          <div class="card shadow-sm cardanimation" style="border-radius: 30px;">
             <div class="card-body m-2">
 
               {% for holding in user_holdings %}
@@ -196,7 +196,7 @@
         </div>
 
         <div class="col">
-          <div class="card shadow-sm cardanimation" style="border-radius: 50px;">
+          <div class="card shadow-sm cardanimation" style="border-radius: 30px;">
             <div class="card-body m-2">
 
               {% for holding in user_holdings %}
@@ -221,7 +221,7 @@
 
       </div>
       
-      <div class="card shadow-sm my-3" style="width: 100%; height=400px;border-radius: 50px;">
+      <div class="card shadow-sm my-3" style="width: 100%; height=400px;border-radius: 30px;">
         <div class="card-body m-3">
           <h3 class="card-title">
             Latest transactions <a class="float-end" href"" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal">See all</a>
@@ -264,7 +264,7 @@
     </div>
 
     <div class="col">
-      <div class="card shadow-sm" style="border-radius: 50px;">
+      <div class="card shadow-sm" style="border-radius: 30px;">
         <div class="card-body m-2">
           <h3 class="card-title">Balance Overtime</h3>
           
@@ -293,7 +293,7 @@
   <!-- Modal -->
   <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="transactionHistoryModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-      <div class="modal-content"  style="border-radius: 50px;">
+      <div class="modal-content"  style="border-radius: 30px;">
         <div class="modal-header">
           <h5 class="modal-title m-2" id="transactionHistoryModal">📜 Transaction History</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
