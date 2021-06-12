@@ -1,1 +1,1 @@
-web: gunicorn MoonPortfolio.wsgi --log-file
+web gunicorn MoonPortfolio.wsgi --log-file
