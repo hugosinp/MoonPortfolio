@@ -138,7 +138,7 @@ def dashboard(request, portfolio_id):
     transactions = Transaction.objects.all().filter(portfolio_id=current_portfolio.id)
 
     #All current portfolio holdings
-    user_holdings = Holding.objects.all().filter(portfolio_id = current_portfolio)
+    user_holdings = Holding.objects.all().filter(portfolio_id=current_portfolio)
 
     #Amount sum order by asset_name (total amount per coin)
     amount_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('amount')).filter(portfolio_id=current_portfolio.id)
@@ -165,12 +165,6 @@ def dashboard(request, portfolio_id):
                     total_asset_amount = amount['amount__sum'],
                 )
 
-            else:
-                holding_record = Holding.objects.create(
-                    portfolio=current_portfolio,
-                    asset_name=amount['asset_name'],
-                    total_asset_amount = amount['amount__sum'], 
-                )
 
         #Updates the total price amount in Holding Table
         for price in price_sum_per_coin:
@@ -186,6 +180,7 @@ def dashboard(request, portfolio_id):
             user_holdings.filter(asset_name=coin.symbol).update(
                 current_value = F('total_asset_amount') * coin.current_price
             )
+
 
         #Pie chart Data
         asset_names = []
@@ -222,13 +217,28 @@ def dashboard(request, portfolio_id):
                     instance.amount = float(negative_amount)
                     instance.total = float(negative_total)
                     instance.total = instance.amount * instance.price_per_coin
-                    
-                instance.save()
+                
+                try:
+                    this_holding = user_holdings.get(asset_name=instance.asset_name)
+                    print("this holding exists")
+                    instance.save()
+                    return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
 
-                return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
+                except:
+                    holding_record = Holding.objects.create(
+                        portfolio=current_portfolio,
+                        asset_name=instance.asset_name,
+                        total_asset_amount=instance.amount,
+                    )
+
+                    instance.holding=holding_record
+                    instance.save()
+
+                    return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
 
         else:
             transaction_form = TransactionForm()
+
 
         #Portfolio Creation Form
         portfolio_form = PortfolioForm()
@@ -340,13 +350,28 @@ def delete_portfolio(request, portfolio_id):
 @login_required(login_url='login')
 def delete_transaction(request, portfolio_id, holding_id, transaction_id):
 
-    this_portofolio = Portfolio.objects.all().filter(id=portfolio_id)
-    this_transaction = Transaction.objects.all().filter(id=transaction_id)
+    this_portofolio = Portfolio.objects.get(id=portfolio_id)
+    this_transaction = Transaction.objects.get(id=transaction_id)
 
     if request.user == this_portofolio.user:
         this_transaction.delete()
+        
+        #All current portfolio transactions
+        transactions = Transaction.objects.filter(portfolio_id=this_portofolio).filter(holding_id=holding_id)
 
-        return redirect('/portfolio/dashboard/'+str(portfolio_id)+'/'+str(holding_id))
+        print(transactions)
+
+        if transactions.exists():
+            print("this holding exists and is not empty")
+
+            return redirect('/portfolio/dashboard/'+str(portfolio_id)+'/'+str(holding_id))
+
+        else:
+            obsolete_holding = Holding.objects.get(id=holding_id)
+            obsolete_holding.delete()
+
+            return redirect('/portfolio/dashboard/'+str(portfolio_id))
+
 
 
 @login_required(login_url='login')
@@ -354,7 +379,45 @@ def holding_details(request, portfolio_id, holding_id):
 
     #CoinGecko API URL
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false'
-    coin_api = requests.get(url).json
+    coin_api = requests.get(url)
+    
+    #Creating or Updating Coin Data
+    for coin in coin_api.json():
+
+        this_coin = Coin.objects.filter(symbol = coin["symbol"].upper())
+
+        if this_coin.exists():
+            this_coin.update(
+                current_price=coin["current_price"], 
+                rank=coin["market_cap_rank"],
+                market_cap=coin["market_cap"], 
+                image=coin["image"], 
+                price_change_24h=coin["price_change_24h"], 
+                price_change_percentage_24h=coin["price_change_percentage_24h"],
+                circulating_supply=coin["circulating_supply"], 
+                total_supply=coin["total_supply"], 
+                ath=coin["ath"], 
+                atl=coin["atl"]
+                )
+            
+        else:
+            coin_record = Coin.objects.create(
+                name=coin["name"], 
+                symbol=coin["symbol"].upper(), 
+                current_price=coin["current_price"], 
+                rank=coin["market_cap_rank"], 
+                market_cap=coin["market_cap"], 
+                image=coin["image"], 
+                price_change_24h=coin["price_change_24h"],
+                price_change_percentage_24h=coin["price_change_percentage_24h"],
+                circulating_supply=coin["circulating_supply"], 
+                total_supply=coin["total_supply"], 
+                ath=coin["ath"], 
+                atl=coin["atl"]
+            )
+
+    #All coin data
+    coin_data = Coin.objects.all()
 
     #All current user portfolios
     user_portfolios = Portfolio.objects.all().filter(user=request.user)
@@ -372,8 +435,36 @@ def holding_details(request, portfolio_id, holding_id):
 
     #Price sum order by asset_name (total price per coin)
     price_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('total')).filter(portfolio_id=current_portfolio.id)
+    #Amount sum order by asset_name (total amount per coin)
+    amount_sum_per_coin = Transaction.objects.values('asset_name').annotate(Sum('amount')).filter(portfolio_id=current_portfolio.id)
+
 
     if request.user == current_portfolio.user:
+
+        #Updates or creates the total asset amount in Holding Table
+        for amount in amount_sum_per_coin:
+            this_holding = Holding.objects.filter(portfolio_id = current_portfolio).filter(asset_name = amount['asset_name'])
+
+            if this_holding.exists():
+                this_holding.filter(asset_name = amount['asset_name']).update(
+                    total_asset_amount = amount['amount__sum'],
+                )
+
+        #Updates the total price amount in Holding Table
+        for price in price_sum_per_coin:
+            this_holding = Holding.objects.filter(portfolio_id = current_portfolio).filter(asset_name = price['asset_name'])
+
+            if this_holding.exists():
+                this_holding.filter(asset_name = price['asset_name']).update(
+                    total_asset_price = price['total__sum']
+                )
+
+        #Updates the asset current value (total_asset_amount*asset current price)
+        for coin in coin_data:
+            user_holdings.filter(asset_name=coin.symbol).update(
+                current_value = F('total_asset_amount') * coin.current_price
+            )
+
 
         #Profit/Loss
         initial = 0.0
@@ -416,7 +507,7 @@ def holding_details(request, portfolio_id, holding_id):
                     
                 instance.save()
 
-                return redirect('/portfolio/dashboard/'+str(current_portfolio.id))
+                return redirect('/portfolio/dashboard/'+str(current_portfolio.id)+'/'+str(holding_id))
 
         else:
             transaction_form = TransactionForm()

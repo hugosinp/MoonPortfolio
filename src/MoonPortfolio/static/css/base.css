@@ -76,3 +76,7 @@
   border-radius: 25%;
   border: 1px solid black;
 }
+
+.modal-open {
+    overflow: inherit;
+  }
