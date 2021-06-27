@@ -27,7 +27,15 @@
 #wrapper.menuDisplayed #sidebar-wrapper{
     width:100px;
 }
-  
+
+#wrapper.menuDisplayed #sidebar-wrapper{
+    width:100px;
+}
+
+#wrapper.menuDisplayed #sidebar-wrapper a span{
+    display: none;
+}
+
 #wrapper.menuDisplayed #page-content-wrapper{
     padding-left:100px;
 }
@@ -77,6 +85,24 @@
   border: 1px solid black;
 }
 
-.modal-open {
-    overflow: inherit;
+.table-sortable th {
+    cursor: pointer;
+  }
+  
+  .table-sortable .th-sort-asc::after {
+    content: "\25b4";
+  }
+  
+  .table-sortable .th-sort-desc::after {
+    content: "\25be";
+  }
+  
+  .table-sortable .th-sort-asc::after,
+  .table-sortable .th-sort-desc::after {
+    margin-left: 5px;
+  }
+  
+  .table-sortable .th-sort-asc,
+  .table-sortable .th-sort-desc {
+    background: rgba(0, 0, 0, 0.1);
   }

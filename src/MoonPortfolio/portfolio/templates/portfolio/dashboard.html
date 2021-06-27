@@ -1,11 +1,11 @@
-{% extends 'home/base_logged.html' %}
+{% extends 'home/base.html' %}
 {% load static %}
 {% load humanize %}
 {% load mathfilters %}
 {% load crispy_forms_tags %}
 
 {% block title %}
-MoonPortfolio | Dashboard
+Portfolios | MoonPortfolio
 {% endblock %}
 
 {% block styles %}
@@ -13,66 +13,110 @@ MoonPortfolio | Dashboard
 
 {% block body %}
 
-<div class="container-flex m-5">
+  {% if portfolios %}
 
-  <div class="row m-5">
+    <div class="container">
+      <!-- ___________________________________________ROW 1___________________________________________-->
+      <div class="row m-5">
 
-    <!-- ___________________________________________ROW 1___________________________________________-->
-    <div class="row mb-5">
-      <h1>Your Portfolios</h1>
+        <div class="col">
+          <h2 class="fw-bold">Welcome back {{ request.user }} !</h2>
 
-      <table class="table table-hover"cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th scope='col'>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for portfolio in portfolios %}
-          <tr>  
-              <td class='align-middle'>
-                <a class="btn btn-primary btn-lg" href="{% url 'dashboard' portfolio.id %}">{{ portfolio.name }}</a>
-                <a class="btn btn-danger btn-lg" href="{% url 'delete_portfolio' portfolio.id %}">❌</a>
-              </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+          <div class="card shadow-sm my-4" style="width: 100%; border-radius: 30px;">
+            <div class="card-body m-3">
+              <h3 class="card-title">
+                My Portfolios
+                <span class="float-end">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPortfolioModal">
+                    <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center"> Add a Portfolio !
+                  </button>
+                </span>
+              </h3>
+
+              <div style="position: relative; overflow: auto; display: block;">
+
+                <table class="table table-hover table-responsive table-borderless"cellspacing="0" width="100%">
+                  <thead>
+                      <tr>
+                          <th scope='col'>Name</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  {% for portfolio in portfolios %}
+                    <tr>  
+                        <td class='align-middle'>
+                          <a class="btn btn-primary btn-lg" href="{% url 'dashboard' portfolio.id %}">{{ portfolio.name }}</a>
+                        </td>
+                        <td class='align-middle'>
+                          <a class="" href="{% url 'delete_portfolio' portfolio.id %}">
+                            <img src="{% static 'img/trash.png' %}" alt="" width="20" height="20" class="d-inline-block align-text-top">
+                          </a>
+                        </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
 
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPortfolioModal">
-        <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center"> Add a Portfolio !
-      </button>
-
-
+        </div>
+      </div>
+      <!-- ___________________________________________END ROW 1___________________________________________-->
     </div>
-    <!-- ___________________________________________END ROW 1___________________________________________-->
+  {% elif not user_holdings %}
+
+    <div class="container">
+      <!-- ___________________________________________ROW 1___________________________________________-->
+      <div class="row m-5">
+
+        <div class="container text-center">
+          <div class="d-flex justify-content-center mb-4">
+            <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+            <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_xUyFWi.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+          </div>
+          <h3>Let's get started by creating your first Portfolio now !</h3>
+          <button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#createPortfolioModal" style="border-radius: 25px;">
+            <img src="{% static 'img/plus.svg' %}" alt="" width="15" height="15" class="m-1 align-text-center">  Create Now
+          </button>
+        </div>
+
+      </div>
+      <!-- ___________________________________________END ROW 1___________________________________________-->
+    </div>  
+  {% endif %}
+
+  <div class="container">
+
     <!-- ___________________________________________ROW 2___________________________________________-->
-    <div class="row">
-      <h1>Gainers & Losers (Last 24h)</h1>
+    <div class="row m-5">
+      
+      <div class="col">
+
+        <h1>Gainers & Losers (Last 24h)</h1>
 
         <div id="carouselExampleControls" class="carousel slide my-4" data-bs-ride="carousel">
         
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <div class="row row-cols-3 row-cols-md-5">
+              <div class="row row-cols-3 row-cols-md-4">
                 {% for gainer in gainers_dict_list %}
                   <div class="col">
-                    <div class="card shadow-sm cardanimation" style="border-radius: 50px;">
+                    <div class="card shadow-sm cardanimation" style="border-radius: 20px">
                       <div class="card-body m-2">
 
                         <a style="text-decoration: none; color: black;" href="{% url 'asset' gainer.symbol|lower %}">
-                          <h4 class="card-title">
+                          <h5 class="card-title">
                             {{ gainer.asset_name }}
                             {% for coin in coin_data %}
                               {% if gainer.asset_name == coin.name %}
-                                <img src="{{ coin.image }}" style="height:25%; width:15%; object-fit: contain;" alt="Responsive image">
+                                <img src="{{ coin.image }}" style="height:20%; width:10%; object-fit: contain;" alt="Responsive image">
                               {% endif %}
                             {% endfor %}
-                          </h4>
-                          <h4 class="fw-bold text-secondary">${{ gainer.current_price |floatformat:"2" }}</h4>
-                          <h3 class="fw-bold text-success">+{{ gainer.price_change_percentage_24h |floatformat:"2" }}%</h3>
+                          </h5>
+                          <h5 class="fw-bold text-secondary">${{ gainer.current_price }}</h5>
+                          <h4 class="fw-bold text-success">+{{ gainer.price_change_percentage_24h|floatformat:"2" }}%</h4>
                         </a>
 
                       </div>
@@ -83,23 +127,23 @@ MoonPortfolio | Dashboard
             </div>
 
             <div class="carousel-item">
-              <div class="row row-cols-3 row-cols-md-5">
+              <div class="row row-cols-3 row-cols-md-4">
                 {% for loser in losers_dict_list %}
                   <div class="col">
-                    <div class="card shadow-sm cardanimation" style="border-radius: 50px;">
+                    <div class="card shadow-sm cardanimation" style="border-radius: 20px">
                       <div class="card-body m-2">
 
                         <a style="text-decoration: none; color: black;" href="{% url 'asset' loser.symbol|lower %}">
-                          <h4 class="card-title">
+                          <h5 class="card-title">
                             {{ loser.asset_name }}
                             {% for coin in coin_data %}
                               {% if loser.asset_name == coin.name %}
-                                <img src="{{ coin.image }}" style="height:25%; width:15%; object-fit: contain;" alt="Responsive image">
+                                <img src="{{ coin.image }}" style="height:20%; width:10%; object-fit: contain;" alt="Responsive image">
                               {% endif %}
                             {% endfor %}
-                          </h4>
-                          <h4 class="fw-bold text-secondary">${{ loser.current_price |floatformat:"2" }}</h4>
-                          <h3 class="fw-bold text-danger">{{ loser.price_change_percentage_24h |floatformat:"2" }}%</h3>
+                          </h5>
+                          <h5 class="fw-bold text-secondary">${{ loser.current_price }}</h5>
+                          <h4 class="fw-bold text-danger">{{ loser.price_change_percentage_24h|floatformat:"2" }}%</h4>
                         </a>
 
                       </div>
@@ -121,39 +165,41 @@ MoonPortfolio | Dashboard
           </button>
         </div>
 
+      </div>
+
     </div>
     <!-- ___________________________________________END ROW 2___________________________________________-->
 
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="createPortfolioModal" tabindex="-1" aria-labelledby="createPortfolioModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="createPortfolioModalLabel">Choose a name for your Portfolio</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center">
-          <form action="" method="POST">
-            {% csrf_token %}
-            {{ portfolio_form|crispy }}                    
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <input type="submit" class="btn btn-primary" value="Save">
-          </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createPortfolioModal" tabindex="-1" aria-labelledby="createPortfolioModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createPortfolioModalLabel">Choose a name for your Portfolio</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <form action="" method="POST">
+              {% csrf_token %}
+              {{ portfolio_form|crispy }}                    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary" value="Save">
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-</div>
+  <script>
+      $(document).ready(function () {
+          $('#coins').DataTable();
+          $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
 
-<script>
-    $(document).ready(function () {
-        $('#coins').DataTable();
-        $('.dataTables_length').addClass('bs-select');
-    });
-</script>
 {% endblock %}

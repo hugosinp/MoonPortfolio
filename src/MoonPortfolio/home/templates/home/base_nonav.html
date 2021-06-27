@@ -24,6 +24,18 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
 
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+        <style>
+            body{
+                font-family: 'Montserrat', sans-serif;
+            }
+            body.modal-open {
+                overflow-y: scroll; important;
+            }
+        </style>
+
         <link rel="icon" href="{% static 'img/moon.png' %}">
         {% block styles %}{% endblock %}
         
@@ -47,7 +59,7 @@
                         <li style="background:rgb(0, 0, 0); border-radius: 20px;">
                             <a class="text-light fw-bold" href="{% url 'dashboard' current_portfolio.id %}" >
                                 <img src="{% static 'img/desktop.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
-                                <span class="px-3">Dashboard</span>
+                                <span class="test px-3">Dashboard</span>
                             </a>
                         </li>
                         <li>
@@ -82,7 +94,7 @@
             <div id="page-content-wrapper">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-lg-12 px-0">
+                        <div class="col-lg-12 px-0" style="background-color:#FFF5EE;">
                             <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background: #6993FF;">
                                 <div class="container-fluid mx-4 mt-2">
                                     <div class="collapse navbar-collapse" id="navbarSupportedContent">

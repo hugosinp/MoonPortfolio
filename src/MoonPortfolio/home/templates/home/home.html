@@ -10,63 +10,94 @@ MoonPortfolio
 {% endblock %}
 
 {% block body %}
-  <div class="container my-5">
-    <div class="row m-5 mb-5">
+  <div class="container-flex bg-dark text-light p-5">
+    <!-- ___________________________________________ROW 1___________________________________________-->
+    <div class="row mx-5 mb-5 p-5">
+
+      <div class="col mt-5">
+        <h1 class="fw-bold">The Best Crypto Asset Manager</h1>
+        <h5>
+            User-Friendly Asset Manager which allows users</br>to easily manage their assets whatever the broker is !</br></br>
+            Control and Overview your expenses and profits</br>with advanced visuals !
+        </h5>
+        </br>
+        <a class="btn btn-primary" href="{% url 'register' %}">Get started !</a>
+      </div>
+      
+      <div class="col">
+        <img src="{% static 'img/wallet.svg' %}" alt="" width="110%" height="100%" class="d-inline-block align-text-top">
+      </div>
+
+    </div>
+    <!-- ___________________________________________END ROW 1___________________________________________-->
+  </div>  
+
+  <div class="container-flex mx-5" id="row2">
+    <div class="d-flex justify-content-center">
+      <a href="#row2">
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_cdlmjpr4.json"  background="transparent"  speed="1"  style="width: 300px; height: 100px;"  loop  autoplay></lottie-player>
+      </a>
+    </div>
+    <!-- ___________________________________________ROW 2___________________________________________-->
+    <div class="row bg-dark text-light m-5 p-5" style="border-radius: 25px;" >
+      
+      <div class="col align-self-center mx-5 mb-5">
+        <div class="d-flex justify-content-center">
+          <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+          <lottie-player src="https://assets10.lottiefiles.com/private_files/lf30_uxql6h6k.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+        </div>  
+
+        <div class="text-center">
+          <h1 class="fw-bold">Control your portfolios !</h1>
+          <h5>
+            Control and Overview your expenses and profits with advanced visuals and data analysis !
+          </h5>
+        </div>
+      </div>
+
+      <div class="col align-self-center mx-5 mb-5">
+
+        <div class="d-flex justify-content-center">
+          <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+          <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_e16yAs.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+        </div>
+
+        <div class="text-center">
+          <h1 class="fw-bold">Improve your profits !</h1>
+          <h5>
+            A well managed portfolio is the first step to the MOON ! 
+          </h5>
+        </div>      
+      </div>
+    </div>
+    <!-- ___________________________________________END ROW 2___________________________________________-->
     
-      <div class="container mb-5">
-        <div class="row mt-5 mb-5">
-
-          <div class="col-5 mt-5">
-            <h1 class="fw-bold">The Best Crypto Asset Manager</h1>
-            <h5>
-                User-Friendly Asset Manager which allows users to easily manage their assets whatever the broker is !</br></br>
-                Control and Overview your expenses and profits with advanced visuals !
-            </h5>
-            </br>
-            <a class="btn btn-primary" href="{% url 'register' %}">Get started !</a>
-          </div>
-          <div class="col">
-            <img src="{% static 'img/wallet.svg' %}" alt="" width="120%" height="100%" class="d-inline-block align-text-top">
-          </div>
-
-        </div>  
+    <!-- ___________________________________________ROW 3___________________________________________-->
+    <div class="row m-5 bg-dark text-light" style="border-radius: 25px;">
+      
+      <div class="col align-self-center m-5">
+        <div class="">
+          <h1 class="fw-bold">Visit the Marketplace !</h1>
+          <h5>
+            A free to use MarketPlace for Amateur to Pro Crypto Holders with all assets wealth indicators
+          </h5>
+          <a class="btn btn-primary" href="{% url 'market_simplified' %}">Go to MarketPlace !</a>
+        </div>    
       </div>
-
-    </div>
-  </div>
-
-  <div class="container bg-dark rounded-pill mb-5">
-    <div class="row m-5 mb-5">
-
-      <div class="container text-light m-5">
-        <div class="row">
-
-          <div class="col ps-5 pt-4 pb-4 ms-5 mt-5 mb-5">
-            <h1 class="fw-bold">Visit the Marketplace !</h1>
-            <h5>
-              A free to use MarketPlace for Amateur to Pro Crypto Holders with all assets wealth indicators
-              </br>
-            </h5>
-            </br>
-            <a class="btn btn-primary" href="{% url 'market_simplified' %}">Go to MarketPlace !</a>
-          </div>
-          <div class="col-4 text-center m-1">
-            <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-            <lottie-player src="https://assets8.lottiefiles.com/datafiles/TK6e5afd6uo1kv4/data.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
-          </div>
-        </div>  
+      <div class="col-4">
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player src="https://assets8.lottiefiles.com/datafiles/TK6e5afd6uo1kv4/data.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>    
       </div>
     </div>
+    <!-- ___________________________________________END ROW 3___________________________________________-->
+
   </div>
-
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<lottie-player src="https://assets4.lottiefiles.com/packages/lf20_e16yAs.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
-
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<lottie-player src="https://assets10.lottiefiles.com/private_files/lf30_uxql6h6k.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
-
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<lottie-player src="https://assets8.lottiefiles.com/packages/lf20_Y8UeVt.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+  
+  <div class="d-flex justify-content-center">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_Y8UeVt.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+  </div>
 
   <script>
     $(document).ready(function () {

@@ -16,7 +16,8 @@ class Portfolio(models.Model):
 
 class Holding(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, null=True, blank=True)
-    asset_name = asset_name = models.CharField(max_length=200)
+    asset_name = models.CharField(max_length=200)
+    average_buy_price = models.CharField(max_length=200, null=True, blank=True)
     total_asset_amount = models.FloatField(default=0)
     total_asset_price = models.FloatField(default=0)
     current_value = models.FloatField(default=0)

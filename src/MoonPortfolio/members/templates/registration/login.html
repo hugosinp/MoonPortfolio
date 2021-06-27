@@ -8,55 +8,55 @@ MoonPortfolio | Log In
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
+  <div class="container-flex m-5">
 
-<section class="intro m-5">
-  <div class="" >
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card gradient-custom bg-dark" style="border-radius: 1rem;">
-              <div class="card-body p-5 text-white">
+    <section class="intro m-5">
+      <div class="" >
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card gradient-custom bg-dark" style="border-radius: 1rem;">
+                  <div class="card-body p-5 text-white">
 
-                <form method="POST">
-                    {% csrf_token %}
-                    {% for message in messages %}
-                        <p class="text-center">{{ message }}</p>
-                    {% endfor%}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for message in messages %}
+                            <p class="text-center">{{ message }}</p>
+                        {% endfor%}
+
+                        <div class="text-center">
+                            <img src="{% static 'img/moon.png' %}" alt="" width="50" height="50" class="d-inline-block align-text-top">
+                            <h1 class="fw-bold my-4 text-uppercase">log in</h1>
+                        </div>
+
+                        <div class="form-outline form-white mb-4">
+                            <label class="form-label" for="typeUser">Username</label>
+                            <input type="text"  id="typeUser" name="username" class="form-control form-control-lg" placeholder="Ex : monke">
+                        </div>
+
+                        <div class="form-outline form-white mb-4">
+                            <label class="form-label" for="typePassword">Password</label>
+                            <input type="password" id="typePassword" name="password" class="form-control form-control-lg" placeholder="Password..."/>
+                        </div>
+
+                        <div class="text-center py-4">
+                            <button class="btn btn-light btn-lg btn-rounded px-5" type="submit">Login</button>
+                        </div>
+
+                    </form>
+
 
                     <div class="text-center">
-                        <img src="{% static 'img/moon.png' %}" alt="" width="50" height="50" class="d-inline-block align-text-top">
-                        <h1 class="fw-bold my-4 text-uppercase">log in</h1>
+                        <p class="mb-0 text-white fw-bold">Not a Moon member yet ? <a href="{% url 'register' %}">Register now !</a></p>
                     </div>
 
-                    <div class="form-outline form-white mb-4">
-                        <label class="form-label" for="typeUser">Username</label>
-                        <input type="text"  id="typeUser" name="username" class="form-control form-control-lg" placeholder="Ex : monke">
-                    </div>
-
-                    <div class="form-outline form-white mb-4">
-                        <label class="form-label" for="typePassword">Password</label>
-                        <input type="password" id="typePassword" name="password" class="form-control form-control-lg" placeholder="Password..."/>
-                    </div>
-
-                    <div class="text-center py-4">
-                        <button class="btn btn-light btn-lg btn-rounded px-5" type="submit">Login</button>
-                    </div>
-
-                </form>
-
-
-                <div class="text-center">
-                    <p class="mb-0 text-white fw-bold">Not a Moon member yet ? <a href="{% url 'register' %}">Register now !</a></p>
+                  </div>
                 </div>
-
               </div>
             </div>
           </div>
-        </div>
       </div>
-  </div>
-</section>
+    </section>
 
-</div>
+  </div>
 {% endblock %}
