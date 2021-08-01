@@ -8,9 +8,14 @@ MoonPortfolio | My Profile
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    
-    <h1>{{ request.user }}'profile</h1>
+    <div class="dark-blue text-light">
+        <div class="container p-5">
+            
+            <h1>{{ request.user }}'profile</h1>
+            <h2>Date joined : {{ request.user.date_joined }}</h2>
 
-</div>
+            <h2>{{ request.user.email }}</h2>
+
+        </div>
+    </div>
 {% endblock %}

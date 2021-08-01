@@ -11,15 +11,16 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
 {% endblock %}
 
 {% block body %}
+  <div class="dark-blue text-light">
 
-<div class="container">
-    <div class="row m-5">
-      
+    <div class="container">
+      <div class="row p-5">
+          
         <div class="container">
           <p><a href="{% url 'market_simplified' %}">Market</a> > <a href="">{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.name }} {% endif %} {% endfor %} <img src="{% for coin in data %} {% if coin.symbol == asset_symbol %} {{coin.image }} {% endif %} {% endfor %}" style="max-height:2%; width:2%; object-fit: contain;" class="img-fluid" alt="Responsive image"></a></p>
           <div class="row">
                           
-            <div class="card shadow" style="width: 100%; border-radius: 50px;">
+            <div class="card shadow-sm" style="width: 100%; border-radius: 50px; background-color: #30304b;">
               <div class="card-body">
                 <div class="row">
                   <div class="col-4 ml-4">
@@ -39,7 +40,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                     {% for coin in data %}
                       {% if coin.symbol == asset_symbol %}
 
-                        <div class="card shadow-sm" style="width: 100%; border-radius: 25px;">
+                        <div class="card shadow-sm" style="width: 100%; border-radius: 25px; background-color: #30304b;">
                           <div class="card-body">
                             <h3 class="card-title">
                               {{coin.name }} Price
@@ -59,7 +60,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                           </div>
                         </div>
 
-                        <div class="card shadow-sm" style="width: 100%; border-radius: 25px;">
+                        <div class="card shadow-sm" style="width: 100%; border-radius: 25px; background-color: #30304b;">
                           <div class="card-body">
                             <h3 class="card-title">
                               Market Cap
@@ -80,7 +81,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                         <div class="row">
 
                           <div class="col">
-                            <div class="card shadow-sm" style="width: 100%; border-radius: 25px;">
+                            <div class="card shadow-sm" style="width: 100%; border-radius: 25px; background-color: #30304b;">
                               <div class="card-body">
                                 <h3 class="card-title">
                                   ATH
@@ -93,7 +94,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                           </div>
 
                           <div class="col">
-                            <div class="card shadow-sm" style="width: 100%; border-radius: 25px;">
+                            <div class="card shadow-sm" style="width: 100%; border-radius: 25px; background-color: #30304b;">
                               <div class="card-body">
                                 <h3 class="card-title">
                                   ATL
@@ -106,7 +107,7 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                           </div>
                         </div>
 
-                        <div class="card shadow-sm" style="width: 100%; border-radius: 25px;">
+                        <div class="card shadow-sm" style="width: 100%; border-radius: 25px; background-color: #30304b;">
                           <div class="card-body">
                             <h3 class="card-title">
                               Supply : {{ coin.circulating_supply|div:coin.total_supply|mul:100|floatformat:"2" }}%
@@ -121,10 +122,6 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
                           </div>
                         </div>
 
-                        
-
-
-
                       {% endif %}
                     {% endfor %}
                   </div>
@@ -133,38 +130,38 @@ MoonPortfolio | {% for coin in data %} {% if coin.symbol == asset_symbol %} {{co
             </div>
           </div>
 
-            <div class="row mt-5">  
-              {% for coin in data %}
-                {% if coin.symbol == asset_symbol %}
-                  <!-- TradingView Widget BEGIN -->
-                  <div class="tradingview-widget-container">
-                    <div id="tradingview_dc5d2"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                    <script type="text/javascript">
-                      new TradingView.widget(
-                      {
-                      "width": 1014,
-                      "height": 610,
-                      "symbol": "BINANCE:{{coin.symbol }}USDT",
-                      "interval": "D",
-                      "timezone": "Etc/UTC",
-                      "theme": "dark",
-                      "style": "1",
-                      "locale": "fr",
-                      "toolbar_bg": "#f1f3f6",
-                      "enable_publishing": false,
-                      "allow_symbol_change": true,
-                      "container_id": "tradingview_dc5d2"
-                    }
-                      );
-                    </script>
-                  </div>
-                  <!-- TradingView Widget END -->
-                {% endif %}
-              {% endfor %}
-            </div>
+          <div class="row mt-5">  
+            {% for coin in data %}
+              {% if coin.symbol == asset_symbol %}
+                <!-- TradingView Widget BEGIN -->
+                <div class="tradingview-widget-container">
+                  <div id="tradingview_dc5d2"></div>
+                  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                  <script type="text/javascript">
+                    new TradingView.widget(
+                    {
+                    "width": 1014,
+                    "height": 610,
+                    "symbol": "BINANCE:{{coin.symbol }}USDT",
+                    "interval": "D",
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "fr",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "allow_symbol_change": true,
+                    "container_id": "tradingview_dc5d2"
+                  }
+                    );
+                  </script>
+                </div>
+                <!-- TradingView Widget END -->
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
+      </div>
     </div>
-</div>
-
+  </div>
 {% endblock %}

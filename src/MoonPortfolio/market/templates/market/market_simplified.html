@@ -10,125 +10,127 @@ MoonPortfolio | Market
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row m-5">
-            <div class="container">
-                <h1>Market ⚖</h1>
-                </br>
-                <!-- TradingView Widget BEGIN -->
-                <div class="tradingview-widget-container">
-                <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-                    {
-                    "symbols": [
-                        {
-                        "proName": "BINANCE:BTCUSDT",
-                        "title": "BTC/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:ETHUSDT",
-                        "title": "ETH/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:BNBUSDT",
-                        "title": "BNB/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:XRPUSDT",
-                        "title": "XRP/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:ADAUSDT",
-                        "title": "ADA/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:DOTUSDT",
-                        "title": "DOT/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:BCHUSDT",
-                        "title": "BCH/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:LTCUSDT",
-                        "title": "LTC/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:UNIUSDT",
-                        "title": "UNI/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:LINKUSDT",
-                        "title": "LINK/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:VETUSDT",
-                        "title": "VET/USDT"
-                        },
-                        {
-                        "proName": "BINANCE:XLMUSDT",
-                        "title": "XLM/USDT"
-                        }
-                    ],
-                    "showSymbolLogo": true,
-                    "colorTheme": "dark",
-                    "isTransparent": false,
-                    "displayMode": "compact",
-                    "locale": "in"
-                    }
-                    </script>
+    <div class="dark-blue text-light">
+        <div class="container">
+            <div class="row p-5">
+                <div class="container">
+                    <h1>Market ⚖</h1>
                     </br>
-                </div>
-                <!-- TradingView Widget END -->
-                </br>
+                    <!-- TradingView Widget BEGIN -->
+                    <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                        {
+                        "symbols": [
+                            {
+                            "proName": "BINANCE:BTCUSDT",
+                            "title": "BTC/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:ETHUSDT",
+                            "title": "ETH/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:BNBUSDT",
+                            "title": "BNB/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:XRPUSDT",
+                            "title": "XRP/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:ADAUSDT",
+                            "title": "ADA/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:DOTUSDT",
+                            "title": "DOT/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:BCHUSDT",
+                            "title": "BCH/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:LTCUSDT",
+                            "title": "LTC/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:UNIUSDT",
+                            "title": "UNI/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:LINKUSDT",
+                            "title": "LINK/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:VETUSDT",
+                            "title": "VET/USDT"
+                            },
+                            {
+                            "proName": "BINANCE:XLMUSDT",
+                            "title": "XLM/USDT"
+                            }
+                        ],
+                        "showSymbolLogo": true,
+                        "colorTheme": "dark",
+                        "isTransparent": false,
+                        "displayMode": "compact",
+                        "locale": "in"
+                        }
+                        </script>
+                        </br>
+                    </div>
+                    <!-- TradingView Widget END -->
+                    </br>
 
-                <div class="btn-group">
-                    <a href="{% url 'market_simplified' %}" class="btn btn-primary active" aria-current="page">Simplified</a>
-                    <a href="{% url 'market_advanced' %}" class="btn btn-primary">Advanced (Trading View)</a>
-                </div>
-                
-                </br></br>
-                
-                <table class="table table-hover table-bordered table-dark" id="coins" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th scope='col'>#</th>
-                            <th scope='col'>Name</th>
-                            <th scope='col'>Price / 24h Change</th>
-                            <th scope='col'>Market Cap</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if data %}
-                            {% for coin in data %}
-                                <tr>
-                                    <td class='align-middle'>{{ coin.market_cap_rank }}</td>
-                                    <td class='align-middle'>
-                                        <a style="text-decoration: none; color: white;" href="asset/{{ coin.symbol }}" target="_blank">
-                                            <img src={{ coin.image }} height='40' style="padding-right: 3%;">
-                                            <span class="fw-bold">{{ coin.name }}</span> 
-                                            <span class="badge bg-dark text-uppercase text-light">{{ coin.symbol }}</span> 
-                                        </a>
-                                    </td>
-                                    <td class='align-middle'>
-                                        {{ coin.current_price|intcomma }} $USD 
-                                        {% if coin.price_change_percentage_24h >= 0 %}
-                                            <span style="color: rgb(153, 255, 153);">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
-                                            <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
-                                        {% elif coin.price_change_percentage_24h < 0 %}
-                                            <span style="color: rgb(255, 102, 102);">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
-                                            <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
-                                        {% endif %}
-                                    </td>
-                                    <td class='align-middle'>{{ coin.market_cap|intcomma }} $USD</td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <h3>No data from CoinGecko</h3>
-                        {% endif %}
+                    <div class="btn-group">
+                        <a href="{% url 'market_simplified' %}" class="btn btn-primary active" aria-current="page">Simplified</a>
+                        <a href="{% url 'market_advanced' %}" class="btn btn-primary">Advanced (Trading View)</a>
+                    </div>
+                    
+                    </br></br>
+                    
+                    <table class="table table-hover table-borderless text-light light-blue" id="coins" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th scope='col'>#</th>
+                                <th scope='col'>Name</th>
+                                <th scope='col'>Price / 24h Change</th>
+                                <th scope='col'>Market Cap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if data %}
+                                {% for coin in data %}
+                                    <tr>
+                                        <td class='align-middle'>{{ coin.market_cap_rank }}</td>
+                                        <td class='align-middle'>
+                                            <a style="text-decoration: none; color: white;" href="asset/{{ coin.symbol }}" target="_blank">
+                                                <img src={{ coin.image }} height='40' style="padding-right: 3%;">
+                                                <span class="fw-bold">{{ coin.name }}</span> 
+                                                <span class="badge bg-dark text-uppercase text-light">{{ coin.symbol }}</span> 
+                                            </a>
+                                        </td>
+                                        <td class='align-middle'>
+                                            {{ coin.current_price|intcomma }} $USD 
+                                            {% if coin.price_change_percentage_24h >= 0 %}
+                                                <span style="color: #96C768">(+{{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                                                <img src="{% static 'img/up.png' %}" alt="" width="15" height="15"> 
+                                            {% elif coin.price_change_percentage_24h < 0 %}
+                                                <span style="color: rgb(255, 102, 102);">({{ coin.price_change_percentage_24h|floatformat:"2" }}%)</span>
+                                                <img src="{% static 'img/down.png' %}" alt="" width="15" height="15"> 
+                                            {% endif %}
+                                        </td>
+                                        <td class='align-middle'>{{ coin.market_cap|intcomma }} $USD</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <h3>No data from CoinGecko</h3>
+                            {% endif %}
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

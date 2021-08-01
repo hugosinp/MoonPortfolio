@@ -5,7 +5,6 @@
     width:200px;
     height:100%;
     overflow-y:hidden;
-    background: #6993FF;
     opacity:0.9;
     transition:all .3s;
     display:flex;
@@ -89,20 +88,28 @@
     cursor: pointer;
   }
   
-  .table-sortable .th-sort-asc::after {
-    content: "\25b4";
+.table-sortable .th-sort-asc::after {
+content: "\25b4";
+}
+
+.table-sortable .th-sort-desc::after {
+content: "\25be";
+}
+
+.table-sortable .th-sort-asc::after,
+.table-sortable .th-sort-desc::after {
+margin-left: 5px;
+}
+
+.table-sortable .th-sort-asc,
+.table-sortable .th-sort-desc {
+background: rgba(0, 0, 0, 0.1);
   }
-  
-  .table-sortable .th-sort-desc::after {
-    content: "\25be";
-  }
-  
-  .table-sortable .th-sort-asc::after,
-  .table-sortable .th-sort-desc::after {
-    margin-left: 5px;
-  }
-  
-  .table-sortable .th-sort-asc,
-  .table-sortable .th-sort-desc {
-    background: rgba(0, 0, 0, 0.1);
-  }
+
+.light-blue{
+    background-color: #30304b; 
+}
+
+.dark-blue{
+    background-color: #1f1f36; 
+}
